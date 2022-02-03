@@ -20,10 +20,7 @@ public class MemberEntity {
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL , orphanRemoval = true)
     private List<VoteBoardEntity> voteBoardList;
-
-    @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL , orphanRemoval = true)
-    private List<SendMessageEntity> sendMessageList;
-
+    
     @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL , orphanRemoval = true)
-    private List<ReceiveMessageEntity> receiveMessageList;
+    private List<MessageEntity> receiveMessageList;
 }
