@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-public class VoteBoardEntity {
+public class VoteBoardEntity extends BaseTimeEntity {
     @Id
     @Column(name = "vote_board_id")
     private Long id;

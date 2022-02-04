@@ -3,7 +3,7 @@ package com.bb.app.entity;
 import javax.persistence.*;
 
 @Entity
-public class VoteAttachEntity {
+public class VoteAttachEntity extends BaseTimeEntity {
     @Id
     @Column(name = "vote_attach_id")
     private Long id;

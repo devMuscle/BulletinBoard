@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-public class MemberEntity {
+public class MemberEntity extends BaseTimeEntity {
     @Id
     @Column(name = "member_id")
     private Long id;

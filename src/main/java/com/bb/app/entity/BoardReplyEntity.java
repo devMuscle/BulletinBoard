@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-public class BoardReplyEntity {
+public class BoardReplyEntity extends BaseTimeEntity {
     @Id
     @Column(name = "board_reply_id")
     private Long id;

@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public class BoardEntity {
+public class BoardEntity extends BaseTimeEntity {
     @Id
     @Column(name = "board_id")
     private Long id;
