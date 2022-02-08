@@ -1,8 +1,17 @@
 package com.bb.app.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 
 @Entity
+@Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class VoteAttachEntity extends BaseTimeEntity {
     @Id
     @Column(name = "vote_attach_id")
@@ -12,7 +21,7 @@ public class VoteAttachEntity extends BaseTimeEntity {
     private String fileOriginalName;
     private String filePath;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "vote_board_id")
     private VoteBoardEntity voteBoard;
 }

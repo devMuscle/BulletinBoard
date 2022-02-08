@@ -1,9 +1,18 @@
 package com.bb.app.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
+@Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class MessageEntity extends BaseTimeEntity {
     @Id
     @Column(name = "message_id")
@@ -13,7 +22,7 @@ public class MessageEntity extends BaseTimeEntity {
     @JoinColumn(name = "sender_id")
     private MemberEntity sender;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "receiver_id")
     private MemberEntity receiver;
 

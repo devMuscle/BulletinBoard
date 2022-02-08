@@ -1,10 +1,19 @@
 package com.bb.app.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
+@Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class VoteBoardEntity extends BaseTimeEntity {
     @Id
     @Column(name = "vote_board_id")
@@ -18,14 +27,14 @@ public class VoteBoardEntity extends BaseTimeEntity {
     private LocalDateTime registerDate;
     private int viewCount = 0;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private MemberEntity member;
 
-    @OneToMany(mappedBy = "voteBoard", cascade = CascadeType.ALL , orphanRemoval = true)
+    @OneToMany(mappedBy = "voteBoard", cascade = CascadeType.ALL , orphanRemoval = true, fetch = FetchType.LAZY)
     private List<VoteAttachEntity> attach;
 
-    @OneToMany(mappedBy = "voteBoard", cascade = CascadeType.ALL , orphanRemoval = true)
+    @OneToMany(mappedBy = "voteBoard", cascade = CascadeType.ALL , orphanRemoval = true, fetch = FetchType.LAZY)
     private List<VoteReplyEntity> replyList;
 
 }

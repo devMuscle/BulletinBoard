@@ -1,9 +1,20 @@
 package com.bb.app.entity;
 
 import javax.persistence.*;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 import java.util.List;
 
+
 @Entity
+@Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class MemberEntity extends BaseTimeEntity {
     @Id
     @Column(name = "member_id")
@@ -15,12 +26,12 @@ public class MemberEntity extends BaseTimeEntity {
     private String email;
     private int point;
 
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL , orphanRemoval = true)
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL , orphanRemoval = true, fetch = FetchType.LAZY)
     private List<BoardEntity> boardList;
 
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL , orphanRemoval = true)
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL , orphanRemoval = true, fetch = FetchType.LAZY)
     private List<VoteBoardEntity> voteBoardList;
     
-    @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL , orphanRemoval = true)
+    @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL , orphanRemoval = true, fetch = FetchType.LAZY)
     private List<MessageEntity> receiveMessageList;
 }

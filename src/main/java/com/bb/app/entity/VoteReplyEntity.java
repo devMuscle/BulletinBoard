@@ -3,11 +3,19 @@ package com.bb.app.entity;
 import com.bb.app.constant.AgreeStatus;
 import com.bb.app.constant.DeleteStatus;
 import com.bb.app.constant.ReadStatus;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
+@Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class VoteReplyEntity extends BaseTimeEntity {
     @Id
     @Column(name = "vote_reply_id")
@@ -15,11 +23,11 @@ public class VoteReplyEntity extends BaseTimeEntity {
 
     private Long parentReplyId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "vote_board_id")
     private VoteBoardEntity voteBoard;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private MemberEntity writer;
 
