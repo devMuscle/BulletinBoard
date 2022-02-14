@@ -2,11 +2,9 @@ package com.bb.app.entity;
 
 import javax.persistence.*;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -18,6 +16,7 @@ import java.util.List;
 public class MemberEntity extends BaseTimeEntity {
     @Id
     @Column(name = "member_id")
+    @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id;
 
     private String loginId;
@@ -27,11 +26,18 @@ public class MemberEntity extends BaseTimeEntity {
     private int point;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL , orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<BoardEntity> boardList;
+    @Builder.Default
+    private List<BoardEntity> boardList = new ArrayList<>();
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL , orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<VoteBoardEntity> voteBoardList;
-    
+    @Builder.Default
+    private List<VoteBoardEntity> voteBoardList = new ArrayList<>();
+
     @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL , orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<MessageEntity> receiveMessageList;
+    @Builder.Default
+    private List<MessageEntity> MessageList = new ArrayList<>();
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 }

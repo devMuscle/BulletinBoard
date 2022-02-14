@@ -18,7 +18,7 @@ public class MessageEntity extends BaseTimeEntity {
     @Column(name = "message_id")
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sender_id")
     private MemberEntity sender;
 

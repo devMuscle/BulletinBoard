@@ -9,6 +9,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import com.bb.app.entity.MemberEntity;
 import com.bb.app.repository.MemberRepository;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.transaction.annotation.Transactional;
+
 
 @SpringBootTest
 class MemberRepositoryTest {
@@ -17,12 +20,20 @@ class MemberRepositoryTest {
     MemberRepository repository;
 
     @Test
+    @Transactional
+    @Rollback(value = false)
     void test() {
         MemberEntity m = MemberEntity.builder()
-                .id(3L)
+                .id(4L)
+                .loginId("test")
+                .password("testpass")
+                .nickName("hongs")
                 .email("agag")
-                .loginId("hi")
+                .point(0)
                 .build();
-    }
 
+        repository.save(m);
+
+
+    }
 }
