@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.apache.catalina.authenticator.SavedRequest;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -12,28 +14,30 @@ import com.bb.app.repository.MemberRepository;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 
 @SpringBootTest
 class MemberRepositoryTest {
 
     @Autowired
     MemberRepository repository;
+    Logger logger = LoggerFactory.getLogger(getClass());
 
     @Test
     @Transactional
     @Rollback(value = false)
     void test() {
-        MemberEntity m = MemberEntity.builder()
-                .id(4L)
-                .loginId("test")
-                .password("testpass")
-                .nickName("hongs")
-                .email("agag")
-                .point(0)
-                .build();
+       String testid = "testId";
+       String testpass = "testpass5";
 
-        repository.save(m);
+       Optional<MemberEntity> m = repository.findByLoginIdAndPassword(testid, testpass);
 
+       MemberEntity member = m.get();
+
+       String a = member.getNickName();
+
+       logger.info(member.getEmail());
 
     }
 }

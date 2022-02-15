@@ -37,7 +37,4 @@ public class MemberEntity extends BaseTimeEntity {
     @Builder.Default
     private List<MessageEntity> MessageList = new ArrayList<>();
 
-    public void setId(Long id) {
-        this.id = id;
-    }
 }
