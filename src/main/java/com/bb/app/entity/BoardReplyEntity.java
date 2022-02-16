@@ -33,4 +33,8 @@ public class BoardReplyEntity extends BaseTimeEntity {
 
     private LocalDateTime registerDate;
     private String comment;
+
+    public void updateComment(String newComment) {
+        this.comment = newComment;
+    }
 }
