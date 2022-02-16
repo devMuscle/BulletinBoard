@@ -1,6 +1,8 @@
 package com.bb.app.controller;
 
+import com.bb.app.entity.BoardEntity;
 import com.bb.app.entity.MemberEntity;
+import com.bb.app.service.BoardService;
 import com.bb.app.service.MemberService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,10 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @RequestMapping("/user/*")
@@ -21,12 +20,15 @@ public class MemberController {
 
     @Autowired
     private MemberService service;
+    @Autowired
+    private BoardService bservice;
     Logger logger = LoggerFactory.getLogger(getClass());
 
     @PostMapping("/signup")
     public ResponseEntity<Void> Signup(@RequestBody MemberEntity member) {
         MemberEntity m = member;
         service.Signup(m);
+
 
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
@@ -63,7 +65,7 @@ public class MemberController {
         return response;
     }
 
-    @GetMapping("/user/{loginId}")
+    @GetMapping("/{loginId}")
     public Object MemberInfo(@PathVariable String loginId) {
 
         logger.info("loginId : " + loginId);
@@ -75,7 +77,7 @@ public class MemberController {
         return member;
     }
 
-    @PutMapping("/user/{loginId}")
+    @PutMapping("/{loginId}")
     public Map<String, String> MemberUpdate(@PathVariable String loginId, @RequestBody MemberEntity member) {
 
         Map<String, String> response = new HashMap<>();
@@ -95,7 +97,7 @@ public class MemberController {
 
         return response;
     }
-    @DeleteMapping("/user/{loginId}")
+    @DeleteMapping("/{loginId}")
     @Transactional
     public Map<String, String> MemberDelete(@PathVariable String loginId){
         Map<String, String> response = new HashMap<>();
@@ -111,11 +113,12 @@ public class MemberController {
 
         return response;
     }
-    @GetMapping("/user/my-write/board/{loginId}")
-    public Map<String, String> myWriteBoard(@PathVariable String loginId){
-        Map<String, String> response = new HashMap<>();
+    @GetMapping("/my-write/board/{loginId}")
+    public Object myWriteBoard(@PathVariable String loginId){
+        List<BoardEntity> board;
+        Optional<MemberEntity> m = service.FindInfo(loginId);
+        board = m.get().getBoardList();
 
-
-        return response;
+        return board;
     }
 }

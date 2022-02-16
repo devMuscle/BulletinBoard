@@ -14,6 +14,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 public class VoteAttachEntity extends BaseTimeEntity {
     @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name = "vote_attach_id")
     private Long id;
 
