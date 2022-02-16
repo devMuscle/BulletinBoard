@@ -57,7 +57,7 @@ public class BoardService {
         Optional<VoteBoardEntity> board = vrepository.findById(bno);
         return  board;
     }
-    public void VoteBoardUpdate(VoteBoardEntity board){ vrepository.save(board);}
+    public void VoteBoardUpdateSave(VoteBoardEntity board){ vrepository.save(board);}
     public void VoteBoardDelete(Long id){
         vrepository.deleteById(id);
     }

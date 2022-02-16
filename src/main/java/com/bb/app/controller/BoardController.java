@@ -13,10 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @RequestMapping("/boards")
@@ -64,7 +61,7 @@ public class BoardController {
     public void TradeboardDelete(@PathVariable Long bno){
         service.BoardDelete(bno);
     }
-    @GetMapping("/*")
+    @GetMapping("/trade-board/*")
     public Object TradeboardList(){
         List<BoardEntity> board = service.TradeboardList();
 
@@ -94,12 +91,40 @@ public class BoardController {
             VoteBoardEntity updateBoard = vb.get();
             updateBoard.UpdateContent(vboard.getContent());
             updateBoard.UpdateTile(vboard.getTitle());
-            
+            service.VoteBoardUpdateSave(updateBoard);
             response.put("msg","수정 성공");
+            logger.info(updateBoard.getTitle());
+
         }else{
             response.put("msg","수정 실패");
         }
         return response;
     }
+    @DeleteMapping("/vote-board/{bno}")
+    @Transactional
+    public void VoteboardDelete(@PathVariable long bno){
+        service.VoteBoardDelete(bno);
+    }
 
+    @GetMapping("/vote-board/*")
+    public Object VoteboardList(){
+        List<VoteBoardEntity> vb = service.VoteboardList();
+
+        return vb;
+    }
+    //전체 계시판 조회
+    @GetMapping("/*")
+    public Map<String, Object> boardList(){
+        List<BoardEntity> tb = service.TradeboardList();
+        List<VoteBoardEntity> vb = service.VoteboardList();
+
+        Map<String, Object> response = new HashMap<>();
+
+        response.put("투표", vb);
+        response.put("거래", tb);
+
+        return response;
+    }
+    //정렬은? Map<object, object> rs = new hashMAp<>();
+    // rs.put(tb, vb);
 }
