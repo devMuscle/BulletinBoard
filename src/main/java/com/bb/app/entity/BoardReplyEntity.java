@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -16,9 +17,11 @@ import java.time.LocalDateTime;
 public class BoardReplyEntity extends BaseTimeEntity {
     @Id
     @Column(name = "board_reply_id")
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
 
-    private Long parentReplyId;
+    @Builder.Default
+    private Long parentReplyId = 0L;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id")
