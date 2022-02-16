@@ -14,6 +14,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 public class BoardAttachEntity extends BaseTimeEntity {
     @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name = "board_attach_id")
     private Long id;
 

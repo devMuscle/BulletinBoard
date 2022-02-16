@@ -1,5 +1,6 @@
 package com.bb.app.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,6 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 public class VoteBoardEntity extends BaseTimeEntity {
     @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name = "vote_board_id")
     private Long id;
 
@@ -28,6 +30,7 @@ public class VoteBoardEntity extends BaseTimeEntity {
     private int viewCount = 0;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
     @JoinColumn(name = "member_id")
     private MemberEntity member;
 
@@ -36,5 +39,12 @@ public class VoteBoardEntity extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "voteBoard", cascade = CascadeType.ALL , orphanRemoval = true, fetch = FetchType.LAZY)
     private List<VoteReplyEntity> replyList;
+
+    public void UpdateTile(String newTile){
+        this.title = newTile;
+    }
+    public void UpdateContent(String newContent){
+        this.content = newContent;
+    }
 
 }
