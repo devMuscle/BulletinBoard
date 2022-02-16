@@ -37,4 +37,14 @@ public class MemberEntity extends BaseTimeEntity {
     @Builder.Default
     private List<MessageEntity> MessageList = new ArrayList<>();
 
+    public void UpdatePassword(String newPassword){
+        this.password = newPassword;
+    }
+    public void UpdateEmail(String newEmail){
+        this.email = newEmail;
+    }
+    public void UpdateNickname(String newNickname){
+        this.nickName = newNickname;
+    }
+
 }

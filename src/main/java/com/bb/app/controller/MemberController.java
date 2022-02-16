@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -72,5 +73,49 @@ public class MemberController {
         MemberEntity member = m.get();
 
         return member;
+    }
+
+    @PutMapping("/user/{loginId}")
+    public Map<String, String> MemberUpdate(@PathVariable String loginId, @RequestBody MemberEntity member) {
+
+        Map<String, String> response = new HashMap<>();
+        Optional<MemberEntity> m = service.FindInfo(loginId);
+
+        if(m.isPresent()) {
+            MemberEntity updateMember = m.get();
+            updateMember.UpdatePassword(member.getPassword());
+            updateMember.UpdateNickname(member.getNickName());
+            updateMember.UpdateEmail(member.getEmail());
+            service.MemberUpdate(updateMember);
+            response.put("msg","정보변경 성공");
+        }else {
+            response.put("msg","정보변경 실패");
+        }
+        logger.info("loginId : " + loginId);
+
+        return response;
+    }
+    @DeleteMapping("/user/{loginId}")
+    @Transactional
+    public Map<String, String> MemberDelete(@PathVariable String loginId){
+        Map<String, String> response = new HashMap<>();
+        service.MemberDelete(loginId);
+
+        Optional<MemberEntity> m = service.FindInfo(loginId);
+
+        if(m.isPresent()){
+            response.put("msg","삭제 실패");
+        }else{
+            response.put("msg","삭제 성공");
+        }
+
+        return response;
+    }
+    @GetMapping("/user/my-write/board/{loginId}")
+    public Map<String, String> myWriteBoard(@PathVariable String loginId){
+        Map<String, String> response = new HashMap<>();
+
+
+        return response;
     }
 }

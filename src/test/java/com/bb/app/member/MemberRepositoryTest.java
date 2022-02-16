@@ -40,4 +40,10 @@ class MemberRepositoryTest {
        logger.info(member.getEmail());
 
     }
+    @Test
+    @Transactional
+    @Rollback(value = false)
+    void DeleteTest(){
+        repository.deleteByLoginId("testId");
+    }
 }

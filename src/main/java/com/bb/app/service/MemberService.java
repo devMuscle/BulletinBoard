@@ -30,4 +30,10 @@ public class MemberService {
         Optional<MemberEntity> member = repository.findByloginId(id);
         return member;
     }
+    public void MemberUpdate(MemberEntity member){
+        repository.save(member);
+    }
+    public void MemberDelete(String id){
+        repository.deleteByLoginId(id);
+    }
 }
