@@ -2,6 +2,7 @@ package com.bb.app.controller;
 
 import com.bb.app.entity.BoardEntity;
 import com.bb.app.entity.MemberEntity;
+import com.bb.app.exception.DuplicatedIdException;
 import com.bb.app.service.BoardService;
 import com.bb.app.service.MemberService;
 import org.slf4j.Logger;
@@ -37,12 +38,12 @@ public class MemberController {
     @GetMapping("/idcheck")
     public Map<String, String> IdCheck(String id) {
         Map<String, String> response = new HashMap<>();
-        Optional<MemberEntity> m = service.IdCheck(id);
 
-        if(m.isPresent()) {
-            response.put("msg","사용중인 아이디 입니다");
-        } else {
+        try {
+            service.IdCheck(id);
             response.put("msg","사용가능한 아이디 입니다");
+        } catch(DuplicatedIdException e) {
+            response.put("msg", e.getMessage());
         }
 
         return response;

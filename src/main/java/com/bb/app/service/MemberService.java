@@ -1,6 +1,7 @@
 package com.bb.app.service;
 
 import com.bb.app.entity.MemberEntity;
+import com.bb.app.exception.DuplicatedIdException;
 import com.bb.app.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,9 +17,12 @@ public class MemberService {
         repository.save(member);
     }
 
-    public Optional<MemberEntity> IdCheck(String id) {
+    public void IdCheck(String id) throws DuplicatedIdException {
         Optional<MemberEntity> member = repository.findByloginId(id);
-        return member;
+
+        if(member.isPresent()) {
+            throw new DuplicatedIdException("이미 존재하는 id 입니다.");
+        }
     }
 
     public Optional<MemberEntity> Login(String id, String pwd) {
