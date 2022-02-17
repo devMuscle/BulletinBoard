@@ -1,6 +1,5 @@
 package com.bb.app.controller;
 
-import com.bb.app.entity.MemberEntity;
 import com.bb.app.entity.MessageEntity;
 import com.bb.app.service.MemberService;
 import com.bb.app.service.MessageService;
@@ -11,7 +10,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -32,9 +33,15 @@ public class MessageController {
     @GetMapping("/view/{mno}")
     public Object MsgView(@PathVariable long mno){
         Optional<MessageEntity> msg = service.MessageView(mno);
+        Map<String, String> response = new HashMap<>();
+        if(msg.isPresent()){
+            response.put("제목", msg.get().getTitle());
+            response.put("내용", msg.get().getContent());
+            response.put("보낸이", String.valueOf(msg.get().getSender().getLoginId()));
+            response.put("받는이", String.valueOf(msg.get().getReceiver().getLoginId()));
+        }
 
-        return msg;
-
+        return response;
     }
     @DeleteMapping("/{mno}")
     public void MsgDelete(@PathVariable long mno){

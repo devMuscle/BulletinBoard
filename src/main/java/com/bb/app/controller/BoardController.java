@@ -48,7 +48,7 @@ public class BoardController {
             BoardEntity updateBoard = b.get();
             updateBoard.UpdateTile(board.getTitle());
             updateBoard.UpdateContent(board.getContent());
-            service.BoardUpdate(updateBoard);
+        //    service.BoardUpdate(updateBoard);
             respones.put("msg","정보변경 성공");
         }else{
             respones.put("msg","정보변경 실패");

@@ -13,7 +13,7 @@ import java.util.Optional;
 @Service
 public class MessageService {
     @Autowired
-    MessageRepository repository;
+    private MessageRepository repository;
 
     public void MessageWrite(MessageEntity msg){
         repository.save(msg);
@@ -22,15 +22,16 @@ public class MessageService {
         Optional<MessageEntity> msg = repository.findById(mno);
         return msg;
     }
+
     public void MessageDelete(Long mno){
         repository.deleteById(mno);
     }
-    public List<MessageEntity> MessageSendBox(Long mno){
+    public List<MessageEntity> MessageSendBox(long mno){
         List<MessageEntity> msg = repository.findBySenderId(mno);
 
         return msg;
     }
-    public List<MessageEntity> MessageInBox(Long mno){
+    public List<MessageEntity> MessageInBox(long mno){
         List<MessageEntity> msg = repository.findByReceiverId(mno);
 
         return msg;
