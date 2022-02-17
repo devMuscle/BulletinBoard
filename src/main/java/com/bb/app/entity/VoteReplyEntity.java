@@ -3,6 +3,7 @@ package com.bb.app.entity;
 import com.bb.app.constant.AgreeStatus;
 import com.bb.app.constant.DeleteStatus;
 import com.bb.app.constant.ReadStatus;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,14 +23,17 @@ public class VoteReplyEntity extends BaseTimeEntity {
     @Column(name = "vote_reply_id")
     private Long id;
 
-    private Long parentReplyId;
+    @Builder.Default
+    private Long parentReplyId = 0L;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "vote_board_id")
+    @JsonIgnore
     private VoteBoardEntity voteBoard;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
+    @JsonIgnore
     private MemberEntity writer;
 
     private LocalDateTime registerDate;
@@ -37,13 +41,8 @@ public class VoteReplyEntity extends BaseTimeEntity {
 
     @Enumerated(EnumType.STRING)
     private AgreeStatus agreeStatus;
-    
-    @Enumerated(EnumType.STRING)
-    private ReadStatus readStatus;
-    
-    @Enumerated(EnumType.STRING)
-    private DeleteStatus reciveDeleteStatus;
-    
-    @Enumerated(EnumType.STRING)
-    private DeleteStatus sendDeleteStatus;
+
+    public void UpdateComment(String newComment) {
+        this.comment = newComment;
+    }
 }
