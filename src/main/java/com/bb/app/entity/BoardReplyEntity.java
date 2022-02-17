@@ -1,5 +1,6 @@
 package com.bb.app.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,16 +26,18 @@ public class BoardReplyEntity extends BaseTimeEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id")
+    @JsonIgnore
     private BoardEntity board;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
+    @JsonIgnore
     private MemberEntity writer;
 
     private LocalDateTime registerDate;
     private String comment;
 
-    public void updateComment(String newComment) {
+    public void UpdateComment(String newComment) {
         this.comment = newComment;
     }
 }

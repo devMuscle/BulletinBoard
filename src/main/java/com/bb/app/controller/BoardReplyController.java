@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/comments/trade-comment")
 public class BoardReplyController {
@@ -15,17 +17,24 @@ public class BoardReplyController {
     BoardReplyService service;
 
     @PostMapping("")
-    private ResponseEntity<Void> writeReply(@RequestBody BoardReplyEntity boardReply) {
+    private ResponseEntity<Void> WriteReply(@RequestBody BoardReplyEntity boardReply) {
         service.writeBoardReply(boardReply);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PutMapping("/{commentNo}")
-    private BoardReplyEntity updateReply(@PathVariable("commentNo") long no, @RequestBody BoardReplyEntity newBoardReply) {
-        BoardReplyEntity boardReply = service.findCommentById(no);
+    private BoardReplyEntity UpdateReply(@PathVariable("commentNo") long no, @RequestBody BoardReplyEntity newBoardReply) {
+        BoardReplyEntity boardReply = service.FindCommentById(no);
         String newComment = newBoardReply.getComment();
-        boardReply.updateComment(newComment);
-        service.updateBoardReply(boardReply);
-        return boardReply;
+        boardReply.UpdateComment(newComment);
+        Optional<BoardReplyEntity> updatedBoardReply = service.UpdateBoardReply(boardReply);
+
+        return updatedBoardReply.get();
+    }
+
+    @DeleteMapping("/{commentNo}")
+    private ResponseEntity<Void> DeleteReply(@PathVariable("commentNo") long no) {
+        service.DeleteBoardReply(no);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

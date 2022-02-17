@@ -1,5 +1,7 @@
 package com.bb.app.entity;
 
+import com.bb.app.constant.DeleteStatus;
+import com.bb.app.constant.ReadStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -30,5 +32,14 @@ public class MessageEntity extends BaseTimeEntity {
     private String title;
     private String content;
     private LocalDateTime registerDate;
+
+    @Enumerated(EnumType.STRING)
+    private ReadStatus readStatus;
+
+    @Enumerated(EnumType.STRING)
+    private DeleteStatus receiveDeleteStatus;
+
+    @Enumerated(EnumType.STRING)
+    private DeleteStatus sendDeleteStatus;
 
 }
