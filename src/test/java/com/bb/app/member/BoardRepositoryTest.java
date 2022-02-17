@@ -39,7 +39,6 @@ class BoardRepositoryTest {
          for(BoardEntity b : board){
              logger.info("제목"+b.getTitle());
              logger.info("내용"+b.getContent());
-             logger.info("작성자"+b.getWriter());
              logger.info("글번호"+b.getId().toString());
          }
     }
