@@ -1,5 +1,7 @@
 package com.bb.app.service;
 
+import com.bb.app.DTO.MessageDto;
+import com.bb.app.Mapper.MessageMapper;
 import com.bb.app.entity.MessageEntity;
 import com.bb.app.repository.MessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,12 +17,16 @@ public class MessageService {
     @Autowired
     private MessageRepository repository;
 
-    public void MessageWrite(MessageEntity msg){
-        repository.save(msg);
+    public void MessageWrite(MessageDto msg){
+        MessageEntity MsgEntity = MessageMapper.INSTANCE.toEntity(msg);
+        repository.save(MsgEntity);
     }
-    public Optional<MessageEntity> MessageView(Long mno) {
+    public MessageDto MessageView(long mno) {
         Optional<MessageEntity> msg = repository.findById(mno);
-        return msg;
+        MessageEntity msgEntity = msg.get();
+        MessageDto msgDto = MessageMapper.INSTANCE.toDto(msgEntity);
+
+        return msgDto;
     }
 
     public void MessageDelete(Long mno){
