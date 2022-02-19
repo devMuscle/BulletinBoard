@@ -2,10 +2,12 @@ package com.bb.app.entity;
 
 import com.bb.app.constant.DeleteStatus;
 import com.bb.app.constant.ReadStatus;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -25,7 +27,7 @@ public class MessageEntity extends BaseTimeEntity {
     @JoinColumn(name = "sender_id")
     private MemberEntity sender;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY )
     @JoinColumn(name = "receiver_id")
     private MemberEntity receiver;
 
@@ -34,12 +36,15 @@ public class MessageEntity extends BaseTimeEntity {
     private LocalDateTime registerDate;
 
     @Enumerated(EnumType.STRING)
+    @ColumnDefault("UNREAD")
     private ReadStatus readStatus;
 
     @Enumerated(EnumType.STRING)
+    @ColumnDefault("UNDELETE")
     private DeleteStatus receiveDeleteStatus;
 
     @Enumerated(EnumType.STRING)
+    @ColumnDefault("UNDELETE")
     private DeleteStatus sendDeleteStatus;
 
 }
