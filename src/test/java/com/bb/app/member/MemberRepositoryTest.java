@@ -2,6 +2,8 @@ package com.bb.app.member;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.bb.app.DTO.MemberDto;
+import com.bb.app.Mapper.MemberMapper;
 import org.apache.catalina.authenticator.SavedRequest;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -28,18 +30,16 @@ class MemberRepositoryTest {
     @Transactional
     @Rollback(value = false)
     void test() {
-       String testid = "testId";
-       String testpass = "testpass5";
+        Optional<MemberEntity> opMember = repository.findById(1L);
+        MemberEntity member = opMember.get();
 
-       Optional<MemberEntity> m = repository.findByLoginIdAndPassword(testid, testpass);
+        MemberDto dtoMember = MemberMapper.INSTANCE.toDto(member);
 
-       MemberEntity member = m.get();
-
-       String a = member.getNickName();
-
-       logger.info(member.getEmail());
-
+        assertEquals(dtoMember.getId(), member.getId());
+        logger.info(dtoMember.getNickName());
+        logger.info(dtoMember.getEmail());
     }
+
     @Test
     @Transactional
     @Rollback(value = false)

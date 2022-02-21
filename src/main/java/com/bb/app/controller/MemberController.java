@@ -1,69 +1,62 @@
 package com.bb.app.controller;
 
+import com.bb.app.DTO.MemberDto;
 import com.bb.app.entity.BoardEntity;
 import com.bb.app.entity.MemberEntity;
 import com.bb.app.exception.DuplicatedIdException;
 import com.bb.app.service.BoardService;
 import com.bb.app.service.MemberService;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.StreamingHttpOutputMessage;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.lang.reflect.Member;
 import java.util.*;
 
 @RestController
 @RequestMapping("/user/*")
+@RequiredArgsConstructor
 public class MemberController {
 
-    @Autowired
-    private MemberService service;
-    @Autowired
-    private BoardService bservice;
-    Logger logger = LoggerFactory.getLogger(getClass());
+    private final MemberService service;
+    private final BoardService bservice;
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     @PostMapping("/signup")
-    public ResponseEntity<Void> Signup(@RequestBody MemberEntity member) {
-        MemberEntity m = member;
-        service.Signup(m);
-
-
+    public ResponseEntity<Void> Signup(@RequestBody MemberDto member) {
+        service.Signup(member);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
 
     @GetMapping("/idcheck")
-    public Map<String, String> IdCheck(String id) {
+    public ResponseEntity<Map<String, String>> IdCheck(String loginId) {
         Map<String, String> response = new HashMap<>();
 
         try {
-            service.IdCheck(id);
+            service.IdCheck(loginId);
             response.put("msg","사용가능한 아이디 입니다");
         } catch(DuplicatedIdException e) {
             response.put("msg", e.getMessage());
         }
 
-        return response;
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PostMapping("/login")
-    public Map<String, String> Login(@RequestBody MemberEntity member) {
-        Map<String, String> response = new HashMap<>();
-
-        logger.info("id : " + member.getLoginId() + ", password : " + member.getPassword());
-
-        Optional<MemberEntity> m = service.Login(member.getLoginId(), member.getPassword());
-
-        if(m.isPresent()) {
-            response.put("msg","로그인 성공");
-        } else {
-            response.put("msg","로그인 실패");
+    public ResponseEntity<MemberDto> Login(@RequestBody MemberDto member) {
+        try{
+            MemberDto m = service.Login(member.getLoginId(), member.getPassword());
+            return new ResponseEntity<>(m, HttpStatus.OK);
+        } catch(NoSuchElementException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-
-        return response;
     }
 
     @GetMapping("/{loginId}")

@@ -18,16 +18,9 @@ import java.util.List;
 public class MemberDto {
 
     private Long id;
-
     private String loginId;
     private String password;
     private String nickName;
     private String email;
     private int point;
-
-    private List<BoardEntity> boardList = new ArrayList<>();
-    private List<VoteBoardEntity> voteBoardList = new ArrayList<>();
-    private List<MessageEntity> MessageList = new ArrayList<>();
-
-
 }
