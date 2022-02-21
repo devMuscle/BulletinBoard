@@ -1,6 +1,6 @@
 package com.bb.app.controller;
 
-import com.bb.app.entity.MemberEntity;
+import com.bb.app.DTO.MessageDto;
 import com.bb.app.entity.MessageEntity;
 import com.bb.app.service.MemberService;
 import com.bb.app.service.MessageService;
@@ -11,7 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -24,17 +26,29 @@ public class MessageController {
     Logger logger = LoggerFactory.getLogger(getClass());
 
     @PostMapping("/write")
-    public ResponseEntity<Void> MsgWrite(@RequestBody MessageEntity msg){
+    public ResponseEntity<Void> MsgWrite(@RequestBody MessageDto msg){
+        logger.info(String.valueOf(msg.getTitle()));
+        System.out.println("test"+ msg.getTitle());
         service.MessageWrite(msg);
 
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
     @GetMapping("/view/{mno}")
-    public Object MsgView(@PathVariable long mno){
-        Optional<MessageEntity> msg = service.MessageView(mno);
+    public Map<String, String> MsgView(@PathVariable long mno){
+        MessageDto msgDto = service.MessageView(mno);
+        Map<String, String> msgJason = new HashMap<>();
+        logger.info(String.valueOf(msgDto.getReceiver()));
 
-        return msg;
+        msgJason.put("message_id", String.valueOf(msgDto.getId()));
+        msgJason.put("content", msgDto.getContent());
+        msgJason.put("read_status", String.valueOf(msgDto.getReadStatus()));
+        msgJason.put("receive_delete_status", String.valueOf(msgDto.getReceiveDeleteStatus()));
+        msgJason.put("send_delete_status", String.valueOf(msgDto.getSendDeleteStatus()));
+        msgJason.put("title", msgDto.getTitle());
+        msgJason.put("receiver_id", String.valueOf(msgDto.getReceiver().getId()));
+        //msgJason.put("sender_id", String.valueOf(msgDto.getSender().getId()));
 
+        return msgJason;
     }
     @DeleteMapping("/{mno}")
     public void MsgDelete(@PathVariable long mno){
