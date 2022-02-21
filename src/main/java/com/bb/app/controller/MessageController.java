@@ -46,7 +46,7 @@ public class MessageController {
         msgJason.put("send_delete_status", String.valueOf(msgDto.getSendDeleteStatus()));
         msgJason.put("title", msgDto.getTitle());
         msgJason.put("receiver_id", String.valueOf(msgDto.getReceiver().getId()));
-        msgJason.put("sender_id", String.valueOf(msgDto.getSender().getId()));
+        //msgJason.put("sender_id", String.valueOf(msgDto.getSender().getId()));
 
         return msgJason;
     }

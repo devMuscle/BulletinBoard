@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 public class MessageDto {
     private Long id;
 
-    private MemberEntity sender;
+    private Long senderId;
 
     private MemberEntity receiver;
 
