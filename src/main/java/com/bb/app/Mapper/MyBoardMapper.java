@@ -7,7 +7,7 @@ import org.mapstruct.Mapper;
 import java.util.List;
 
 @Mapper
-public interface MyBoardDtoMapper {
+public interface MyBoardMapper {
 
 
     MyBoardDto toMyBoardDto(BoardEntity boardEntity);
