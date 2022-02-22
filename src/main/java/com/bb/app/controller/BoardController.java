@@ -1,5 +1,7 @@
 package com.bb.app.controller;
 
+import com.bb.app.DTO.BoardDto;
+import com.bb.app.DTO.VoteBoardDto;
 import com.bb.app.entity.BoardEntity;
 import com.bb.app.entity.VoteBoardEntity;
 import com.bb.app.service.BoardService;
@@ -25,106 +27,64 @@ public class BoardController {
 
     //trade 게시판 컨트롤
     @PostMapping("/trade-board/write")
-    public ResponseEntity<Void> TradeboardWrite(@RequestBody BoardEntity board){
-        //BoardEntity b = board;
+    public ResponseEntity<Void> TradeboardWrite(@RequestBody BoardDto board){
         service.writeBoard(board);
 
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
     @GetMapping("/trade-board/{bno}")
-    public Object TradeboardView(@PathVariable long bno){
-        Optional<BoardEntity> board;
-        board = service.TradeboardView(bno);
-
+    public BoardDto TradeboardView(@PathVariable long bno){
+        BoardDto board = service.TradeboardView(bno);
         return board;
     }
     @PutMapping("/trade-board/{bno}")
-    public Map<String, String> TradeboardUpdate(@PathVariable long bno, @RequestBody BoardEntity board){
+    public ResponseEntity<Void> TradeboardUpdate(@PathVariable long bno, @RequestBody BoardDto board){
+        service.TradeboardUpdate(bno, board);
 
-        Map<String, String> respones = new HashMap<>();
-        Optional<BoardEntity> b = service.TradeboardUpdate(bno);
-        logger.info("bno : " + b.get().getId());
-        if(b.isPresent()){
-            BoardEntity updateBoard = b.get();
-            updateBoard.UpdateTile(board.getTitle());
-            updateBoard.UpdateContent(board.getContent());
-        //    service.BoardUpdate(updateBoard);
-            respones.put("msg","정보변경 성공");
-        }else{
-            respones.put("msg","정보변경 실패");
-        }
-
-        return respones;
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
     @DeleteMapping("/trade-board/{bno}")
-    @Transactional
-    public void TradeboardDelete(@PathVariable Long bno){
+    public ResponseEntity<Void> TradeboardDelete(@PathVariable Long bno){
         service.BoardDelete(bno);
+
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
     @GetMapping("/trade-board/*")
-    public Object TradeboardList(){
-        List<BoardEntity> board = service.TradeboardList();
+    public List<BoardDto> TradeboardList(){
+        List<BoardDto> board = service.TradeboardList();
 
         return board;
     }
     //투표게시판 컨트롤러
     @PostMapping("/vote-board/write")
-    public ResponseEntity<Void> VoteboardWrite(@RequestBody VoteBoardEntity board){
-        String vbContent = board.getTitle();
-        logger.info(vbContent);
+    public ResponseEntity<Void> VoteboardWrite(@RequestBody VoteBoardDto board){
         service.writeVoteBoard(board);
 
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
     @GetMapping("/vote-board/{bno}")
-    public Object VoteboardView(@PathVariable long bno){
-        Optional<VoteBoardEntity> vboard = service.VoteboardView(bno);
-
-        return vboard;
+    public VoteBoardDto VoteboardView(@PathVariable long bno){
+        VoteBoardDto board = service.VoteboardView(bno);
+        return board;
     }
     @PutMapping("/vote-board/{bno}")
-    public Map<String, String> VoteboardUpdate(@PathVariable long bno, @RequestBody VoteBoardEntity vboard){
-        Optional<VoteBoardEntity> vb = service.VoteboardUpdate(bno);
-        Map<String, String> response = new HashMap<>();
-        
-        if(vb.isPresent()){
-            VoteBoardEntity updateBoard = vb.get();
-            updateBoard.UpdateContent(vboard.getContent());
-            updateBoard.UpdateTile(vboard.getTitle());
-            service.VoteBoardUpdateSave(updateBoard);
-            response.put("msg","수정 성공");
-            logger.info(updateBoard.getTitle());
+    public ResponseEntity<Void> VoteboardUpdate(@PathVariable long bno, @RequestBody VoteBoardDto board){
+        service.VoteboardUpdate(bno, board);
 
-        }else{
-            response.put("msg","수정 실패");
-        }
-        return response;
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
     @DeleteMapping("/vote-board/{bno}")
-    @Transactional
-    public void VoteboardDelete(@PathVariable long bno){
+    public ResponseEntity<Void> VoteboardDelete(@PathVariable Long bno){
         service.VoteBoardDelete(bno);
-    }
 
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
     @GetMapping("/vote-board/*")
-    public Object VoteboardList(){
-        List<VoteBoardEntity> vb = service.VoteboardList();
+    public List<VoteBoardDto> VoteboardList(){
+        List<VoteBoardDto> board = service.VoteboardList();
 
-        return vb;
+        return board;
     }
-    //전체 계시판 조회
-    @GetMapping("/*")
-    public Map<String, Object> boardList(){
-        List<BoardEntity> tb = service.TradeboardList();
-        List<VoteBoardEntity> vb = service.VoteboardList();
 
-        Map<String, Object> response = new HashMap<>();
 
-        response.put("투표", vb);
-        response.put("거래", tb);
-
-        return response;
-    }
-    //정렬은? Map<object, object> rs = new hashMAp<>();
-    // rs.put(tb, vb);
 }

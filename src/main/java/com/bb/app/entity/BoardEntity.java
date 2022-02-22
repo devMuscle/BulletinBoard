@@ -26,6 +26,7 @@ public class BoardEntity extends BaseTimeEntity {
     private String content;
     private LocalDateTime registerDate;
     private int viewCount = 0;
+    private String writer;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore

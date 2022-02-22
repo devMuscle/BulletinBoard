@@ -1,68 +1,104 @@
 package com.bb.app.service;
 
+import com.bb.app.DTO.BoardDto;
+import com.bb.app.DTO.VoteBoardDto;
+import com.bb.app.Mapper.BoardMapper;
+import com.bb.app.Mapper.VoteBoardMapper;
 import com.bb.app.entity.BoardEntity;
+import com.bb.app.entity.MemberEntity;
 import com.bb.app.entity.VoteBoardEntity;
 import com.bb.app.repository.BoardRepository;
+import com.bb.app.repository.MemberRepository;
 import com.bb.app.repository.VoteBoardRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class BoardService {
-    @Autowired
-    BoardRepository repository;
-    @Autowired
-    VoteBoardRepository vrepository;
+
+    private final BoardRepository boardRepository;
+    private final VoteBoardRepository vBoardRepository;
+    private final MemberRepository memberRepository;
+    Logger logger = LoggerFactory.getLogger(getClass());
+
+    public BoardService(BoardRepository boardRepository, VoteBoardRepository vBoardRepository, MemberRepository memberRepository){
+        this.boardRepository = boardRepository;
+        this.vBoardRepository = vBoardRepository;
+        this.memberRepository = memberRepository;
+    }
 
     //trateBoard 서비스
-    public void writeBoard(BoardEntity board){
-        repository.save(board);
+    @Transactional
+    public void writeBoard(BoardDto boardDto){
+        BoardEntity boardEntity = BoardMapper.INSTANCE.toEntity(boardDto);
+        Optional<MemberEntity> member = memberRepository.findById(boardDto.getMember());
+        MemberEntity memberEntity = member.get();
+        memberEntity.UpdateboardList(boardEntity);
+
     }
-    public List<BoardEntity> findByMemberId(long memberId){
-        List<BoardEntity> board = repository.findByMember_Id(memberId);
-        return board;
+
+    public BoardDto TradeboardView(long bno){
+        Optional<BoardEntity> board = boardRepository.findById(bno);
+        BoardEntity boardEntity = board.get();
+        BoardDto boardDto = BoardMapper.INSTANCE.toDto(boardEntity);
+        return  boardDto;
     }
-    public Optional<BoardEntity> TradeboardView(long bno){
-        Optional<BoardEntity> board = repository.findById(bno);
-        return  board;
+    @Transactional
+    public void TradeboardUpdate(long bno, BoardDto boardDto){
+        Optional<BoardEntity> board = boardRepository.findById(bno);
+        BoardEntity boardUpdate = board.get();
+
+        boardUpdate.UpdateContent(boardDto.getContent());
+        boardUpdate.UpdateTile(boardDto.getTitle());
+
     }
-    public Optional<BoardEntity> TradeboardUpdate(long bno){
-        Optional<BoardEntity> board = repository.findById(bno);
-        return  board;
-    }
-    public void BoardUpdate(BoardEntity board){ repository.save(board);}
+    @Transactional
     public void BoardDelete(Long id){
-        repository.deleteById(id);
+        boardRepository.deleteById(id);
     }
-    public List<BoardEntity> TradeboardList(){
-        List<BoardEntity> board = repository.findAll();
-        return board;
+    public List<BoardDto> TradeboardList(){
+        List<BoardEntity> entityList = boardRepository.findAll();
+        List<BoardDto> boardList = BoardMapper.INSTANCE.toDtoList(entityList);
+        return boardList;
     }
+
+
+
     //voteBoard 서비스
-    public void writeVoteBoard(VoteBoardEntity board){
-        vrepository.save(board);
+    @Transactional
+    public void writeVoteBoard(VoteBoardDto boardDto){
+        VoteBoardEntity boardEntity = VoteBoardMapper.INSTANCE.toEntity(boardDto);
+        Optional<MemberEntity> member = memberRepository.findById(boardDto.getMember());
+        MemberEntity memberEntity = member.get();
+        memberEntity.UpdatevoteBoardList(boardEntity);
+
     }
-    public List<VoteBoardEntity> findByVMemberId(long memberId){
-        List<VoteBoardEntity> board = vrepository.findByMember_Id(memberId);
-        return board;
+    public VoteBoardDto VoteboardView(long bno){
+        Optional<VoteBoardEntity> board = vBoardRepository.findById(bno);
+        VoteBoardEntity boardEntity = board.get();
+        VoteBoardDto boardDto = VoteBoardMapper.INSTANCE.toDto(boardEntity);
+        return  boardDto;
     }
-    public Optional<VoteBoardEntity> VoteboardView(long bno){
-        Optional<VoteBoardEntity> board = vrepository.findById(bno);
-        return  board;
+    @Transactional
+    public void VoteboardUpdate(long bno, VoteBoardDto board){
+        Optional<VoteBoardEntity> boardEntity = vBoardRepository.findById(bno);
+        VoteBoardEntity boardUpdate = boardEntity.get();
+
+        boardUpdate.UpdateTile(board.getTitle());
+        boardUpdate.UpdateContent(board.getContent());
     }
-    public Optional<VoteBoardEntity> VoteboardUpdate(long bno){
-        Optional<VoteBoardEntity> board = vrepository.findById(bno);
-        return  board;
-    }
-    public void VoteBoardUpdateSave(VoteBoardEntity board){ vrepository.save(board);}
+    @Transactional
     public void VoteBoardDelete(Long id){
-        vrepository.deleteById(id);
+        vBoardRepository.deleteById(id);
     }
-    public List<VoteBoardEntity> VoteboardList(){
-        List<VoteBoardEntity> board = vrepository.findAll();
-        return board;
+    public List<VoteBoardDto> VoteboardList(){
+        List<VoteBoardEntity> entityList = vBoardRepository.findAll();
+        List<VoteBoardDto> boardList = VoteBoardMapper.INSTANCE.toDtoList(entityList);
+        return boardList;
     }
 }

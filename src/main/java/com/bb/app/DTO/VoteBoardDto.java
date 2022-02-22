@@ -26,8 +26,8 @@ public class VoteBoardDto {
     private String content;
     private LocalDateTime registerDate;
     private int viewCount = 0;
-
-    private MemberEntity member;
+    private String writer;
+    private Long member;
 
     private List<VoteAttachEntity> attach;
 
