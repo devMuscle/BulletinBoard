@@ -2,8 +2,11 @@ package com.bb.app.member;
 
 import com.bb.app.DTO.MessageDto;
 import com.bb.app.Mapper.MessageMapper;
+import com.bb.app.entity.MemberEntity;
 import com.bb.app.entity.MessageEntity;
+import com.bb.app.repository.MemberRepository;
 import com.bb.app.repository.MessageRepository;
+import org.aspectj.bridge.Message;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +15,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.lang.reflect.Member;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -22,26 +27,31 @@ class MessageRepositoryTests {
 
 
     @Autowired
-    MessageRepository repository;
+    MessageRepository msgRepository;
+    MemberRepository memRepository;
     Logger logger = LoggerFactory.getLogger(getClass());
 
     @Test
     @Transactional
     @Rollback(value = false)
     public void dtoToEntity() {
-        MessageDto personDto = MessageDto.builder()
-                .id(4L)
-                .content("test1")
-                .title("titile")
+
+        MessageDto msgDto = MessageDto.builder()
+                .title("제목2")
+                .content("내용2")
+                .senderId(1L)
+                .receiverId(2L)
                 .build();
 
-        MessageEntity person = MessageMapper.INSTANCE.toEntity(personDto);  //service 등록 후 사용
+        MessageEntity msg =  MessageMapper.INSTANCE.toEntity(msgDto);
 
-        assertEquals(personDto.getContent(), person.getContent());
-        assertEquals(personDto.getTitle(), person.getTitle());
+        msgRepository.save(msg);
+
+
+
     }
 
-    void test() {
+//    void test() {
 //        List<BoardEntity> m = repository.findByMember_Id(6L);
 //        for(BoardEntity board : m) {
 //
@@ -56,5 +66,5 @@ class MessageRepositoryTests {
 //            logger.info("내용"+b.getContent());
 //            logger.info("글번호"+b.getId().toString());
 //        }
-    }
+
 }
