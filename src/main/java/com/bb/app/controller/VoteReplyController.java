@@ -25,19 +25,16 @@ public class VoteReplyController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-//    @PutMapping("/{commentNo}")//댓글 수정
-//    private VoteReplyEntity UpdateReply(@PathVariable("commentNo") long no, @RequestBody VoteReplyEntity newVoteReply) {
-//        VoteReplyEntity voteReply = service.FindCommentById(no);
-//        String newComment = newVoteReply.getComment();
-//        voteReply.UpdateComment(newComment);
-//        Optional<VoteReplyEntity> updatedVoteReply = service.UpdateBoardReply(voteReply);
-//
-//        return updatedVoteReply.get();
-//    }
-//
-//    @DeleteMapping("/{commentNo}")//댓글 삭제
-//    private ResponseEntity<Void> DeleteReply(@PathVariable("commentNo") long no) {
-//        service.DeleteVoteReply(no);
-//        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-//    }
+    @PutMapping("/{commentNo}")//댓글 수정
+    private ResponseEntity<Void> UpdateReply(@PathVariable long commentNo, @RequestBody VoteReplyDto newVoteReply) {
+        voteReplyService.UpdateBoardReply(commentNo, newVoteReply);
+
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/{commentNo}")//댓글 삭제
+    private ResponseEntity<Void> DeleteReply(@PathVariable long commentNo) {
+        voteReplyService.DeleteVoteReply(commentNo);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }

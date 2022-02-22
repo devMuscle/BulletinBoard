@@ -16,21 +16,13 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class MessageDto {
     private Long id;
-
     private Long senderId;
-
     private Long receiverId;
-
     private String title;
-
     private String content;
-
     private LocalDateTime registerDate;
-
     private ReadStatus readStatus;
-
     private DeleteStatus receiveDeleteStatus;
-
     private DeleteStatus sendDeleteStatus;
 
 //    public void setSenderId(Long senderId){
