@@ -12,6 +12,6 @@ import lombok.NoArgsConstructor;
 public class MyBoardDto {
     private Long id;
     private String title;
-    private Long writer;
+    private String writer;
     private int view;
 }
