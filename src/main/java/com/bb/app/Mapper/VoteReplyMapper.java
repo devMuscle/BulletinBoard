@@ -14,9 +14,10 @@ import java.util.List;
 public interface VoteReplyMapper {
     VoteReplyMapper INSTANCE = Mappers.getMapper(VoteReplyMapper.class);
 
-    @Mapping(source = "voteBoardId", target = "vote.board.id")
-    @Mapping(source = "memberId", target = "member.id")
+    @Mapping(source = "voteBoardId", target = "voteBoard.id")
+    @Mapping(source = "memberId", target = "writer.id")
     VoteReplyEntity toEntity(VoteReplyDto voteReplyDto);
+
     VoteReplyDto toDto(VoteReplyEntity voteReplyEntity);
 
     List<VoteReplyEntity> toEntity(List<VoteReplyDto> voteReplyDto);
