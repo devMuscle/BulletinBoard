@@ -47,4 +47,15 @@ public class MemberEntity extends BaseTimeEntity {
         this.nickName = newNickname;
     }
 
+    public void UpdateboardList(final BoardEntity board){
+        boardList.add(board);
+    }
+    public void UpdatevoteBoardList(final VoteBoardEntity vBoard){
+        voteBoardList.add(vBoard);
+    }
+    public void UpdateMessageList(final MessageEntity msg){
+        MessageList.add(msg);
+    }
+
+
 }
