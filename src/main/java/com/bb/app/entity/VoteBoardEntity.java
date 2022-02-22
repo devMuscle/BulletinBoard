@@ -48,4 +48,8 @@ public class VoteBoardEntity extends BaseTimeEntity {
         this.content = newContent;
     }
 
+    public void UpdateVoteReplyList(final VoteReplyEntity msg){
+        replyList.add(msg);
+    }
+
 }

@@ -46,4 +46,8 @@ public class BoardEntity extends BaseTimeEntity {
         this.content = newContent;
     }
 
+    public void UpdateBoardReplyList(final BoardReplyEntity msg){
+        replyList.add(msg);
+    }
+
 }
