@@ -23,7 +23,7 @@ public class BoardDto {
     private LocalDateTime registerDate;
     private int viewCount = 0;
     private String writer;
-    private MemberEntity member;
+    private Long member;
 
     private List<BoardAttachEntity> attach;
     private List<BoardReplyEntity> replyList;

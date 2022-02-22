@@ -47,11 +47,11 @@ public class MessageEntity extends BaseTimeEntity {
     @ColumnDefault("UNDELETE")
     private DeleteStatus sendDeleteStatus;
 
-    public void setSender(MemberEntity sender){
-        this.sender = sender;
-    }
-    public void setReceiver(MemberEntity receiver){
-        this.receiver = receiver;
-    }
+//    public void setSender(MemberEntity sender){
+//        this.sender = sender;
+//    }
+//    public void setReceiver(MemberEntity receiver){
+//        this.receiver = receiver;
+//    }
 
 }

@@ -39,7 +39,7 @@ public class MemberService {
             throw new DuplicatedIdException("이미 존재하는 id 입니다.");
         }
     }
-
+                                                  
     public MemberDto login(String id, String pwd) {
         Optional<MemberEntity> opMember = memberRepository.findByLoginIdAndPassword(id, pwd);
         MemberEntity memberEntity = opMember.orElseThrow();
