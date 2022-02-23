@@ -3,13 +3,9 @@ package com.bb.app.service;
 import com.bb.app.DTO.SaveBoardReplyDto;
 import com.bb.app.Mapper.SaveBoardReplyMapper;
 import com.bb.app.entity.BoardReplyEntity;
-import com.bb.app.exception.DeleteException;
 import com.bb.app.repository.BoardReplyRepository;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,7 +30,7 @@ public class BoardReplyService {
        boardReplyEntity.updateComment(boardReplyDto.getComment());
     }
 
-    public void DeleteBoardReply(long replyNo) throws DeleteException {
+    public void DeleteBoardReply(long replyNo) throws EmptyResultDataAccessException {
         boardReplyRepository.deleteById(replyNo);
     }
 }
