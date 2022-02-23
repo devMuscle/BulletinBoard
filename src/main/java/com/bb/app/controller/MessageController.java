@@ -34,7 +34,7 @@ public class MessageController {
 
     @PostMapping("/write")
     public ResponseEntity<Void> MsgWrite(@RequestBody MessageDto msg){
-        logger.info(String.valueOf("컨트롤러: "+msg.getSenderId()));
+        logger.info(String.valueOf("컨트롤러: " + msg.getSenderId()));
         messageService.MessageWrite(msg);
 
         return new ResponseEntity<>(HttpStatus.CREATED);
