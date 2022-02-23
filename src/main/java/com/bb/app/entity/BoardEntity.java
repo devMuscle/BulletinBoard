@@ -34,7 +34,7 @@ public class BoardEntity extends BaseTimeEntity {
     private MemberEntity member;
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL , orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<BoardAttachEntity> attach;
+    private List<BoardAttachEntity> attach = new ArrayList<>();
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL , orphanRemoval = true, fetch = FetchType.LAZY)
     private List<BoardReplyEntity> replyList;
@@ -49,5 +49,12 @@ public class BoardEntity extends BaseTimeEntity {
     public void UpdateBoardReplyList(final BoardReplyEntity msg){
         replyList.add(msg);
     }
-
+    public void addBoardAttachList(List<BoardAttachEntity> boardAttachEntityList) {
+        /*
+        for(BoardAttachEntity boardAttachEntity : boardAttachEntityList) {
+            attach.add(boardAttachEntity);
+        }
+*/
+        attach = boardAttachEntityList;
+    }
 }

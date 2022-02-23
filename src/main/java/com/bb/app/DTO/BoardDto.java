@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -25,6 +26,4 @@ public class BoardDto {
     private String writer;
     private Long member;
 
-    private List<BoardAttachEntity> attach;
-    private List<BoardReplyEntity> replyList;
 }

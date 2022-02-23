@@ -4,42 +4,45 @@ import com.bb.app.DTO.BoardDto;
 import com.bb.app.DTO.VoteBoardDto;
 import com.bb.app.Mapper.BoardMapper;
 import com.bb.app.Mapper.VoteBoardMapper;
+import com.bb.app.constant.BoardAttachHandler;
+import com.bb.app.entity.BoardAttachEntity;
 import com.bb.app.entity.BoardEntity;
 import com.bb.app.entity.MemberEntity;
 import com.bb.app.entity.VoteBoardEntity;
 import com.bb.app.repository.BoardRepository;
 import com.bb.app.repository.MemberRepository;
 import com.bb.app.repository.VoteBoardRepository;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class BoardService {
 
     private final BoardRepository boardRepository;
     private final VoteBoardRepository vBoardRepository;
     private final MemberRepository memberRepository;
-    Logger logger = LoggerFactory.getLogger(getClass());
+    private final BoardAttachHandler boardAttachHandler;
 
-    public BoardService(BoardRepository boardRepository, VoteBoardRepository vBoardRepository, MemberRepository memberRepository){
-        this.boardRepository = boardRepository;
-        this.vBoardRepository = vBoardRepository;
-        this.memberRepository = memberRepository;
-    }
 
     //trateBoard 서비스
     @Transactional
-    public void writeBoard(BoardDto boardDto){
+    public void writeBoard(List<MultipartFile> files, BoardDto boardDto) throws Exception {
         BoardEntity boardEntity = BoardMapper.INSTANCE.toEntity(boardDto);
+        List<BoardAttachEntity> boardAttachEntityList = boardAttachHandler.parseFileInfo(files);
+
+        boardEntity.addBoardAttachList(boardAttachEntityList);
         Optional<MemberEntity> member = memberRepository.findById(boardDto.getMember());
+
         MemberEntity memberEntity = member.get();
         memberEntity.UpdateboardList(boardEntity);
-
     }
 
     public BoardDto TradeboardView(long bno){

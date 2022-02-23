@@ -30,17 +30,5 @@ class BoardReplyRepositoryTest {
     @Rollback(value = false)
     void test() {
 
-        Optional<BoardEntity> board = boardRepository.findById(1L);
-        Optional<MemberEntity> member = memberRepository.findById(1L);
-
-        BoardReplyEntity reply = BoardReplyEntity.builder()
-                .comment("댓글입니다용")
-                .board(board.get())
-                .writer(member.get())
-                .build();
-
-        replyRepository.save(reply);
-
-
     }
 }
