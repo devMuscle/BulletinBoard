@@ -17,8 +17,8 @@ import java.time.LocalDateTime;
 public class VoteReplyDto {
     private Long id;
     private Long parentReplyId = 0L;
-    private VoteBoardEntity voteBoard;
-    private MemberEntity writer;
+    private Long voteBoardId;               //조인
+    private Long memberId;                  //조인
     private LocalDateTime registerDate;
     private String comment;
     private AgreeStatus agreeStatus;
