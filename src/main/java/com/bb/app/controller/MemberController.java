@@ -2,28 +2,22 @@ package com.bb.app.controller;
 
 import com.bb.app.DTO.MemberDto;
 import com.bb.app.DTO.MyBoardDto;
-import com.bb.app.entity.BoardEntity;
-import com.bb.app.entity.MemberEntity;
 import com.bb.app.exception.DeleteException;
 import com.bb.app.exception.DuplicatedIdException;
-import com.bb.app.service.BoardService;
 import com.bb.app.service.MemberService;
 import lombok.RequiredArgsConstructor;
 
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.StreamingHttpOutputMessage;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.lang.reflect.Member;
 import java.util.*;
 
 @RestController
 @RequestMapping("/user/*")
 @RequiredArgsConstructor
-@Log4j2
+@Slf4j
 public class MemberController {
 
     private final MemberService memberService;
