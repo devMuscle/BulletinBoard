@@ -12,10 +12,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class BoardAttachDto {
     private Long id;
-
     private String fileName;
     private String fileOriginalName;
     private String filePath;
 
-    private BoardEntity board;
 }

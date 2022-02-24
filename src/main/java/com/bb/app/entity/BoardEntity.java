@@ -34,14 +34,17 @@ public class BoardEntity extends BaseTimeEntity {
     private MemberEntity member;
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL , orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<BoardAttachEntity> attach;
+    @Builder.Default
+    private List<BoardAttachEntity> attach = new ArrayList<>();
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL , orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<BoardReplyEntity> replyList;
+    @Builder.Default
+    private List<BoardReplyEntity> replyList = new ArrayList<>();
 
     public void UpdateTile(String newTile){
         this.title = newTile;
     }
+
     public void UpdateContent(String newContent){
         this.content = newContent;
     }
@@ -50,4 +53,10 @@ public class BoardEntity extends BaseTimeEntity {
         replyList.add(msg);
     }
 
+    public void addBoardAttachList(List<BoardAttachEntity> boardAttachEntityList) {
+        for(BoardAttachEntity boardAttachEntity : boardAttachEntityList) {
+            boardAttachEntity.insertBoardId(this);
+            attach.add(boardAttachEntity);
+        }
+    }
 }

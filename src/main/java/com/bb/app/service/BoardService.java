@@ -1,54 +1,78 @@
 package com.bb.app.service;
 
+import com.bb.app.DTO.BoardDetailDto;
 import com.bb.app.DTO.BoardDto;
+import com.bb.app.DTO.VoteBoardDetailDto;
 import com.bb.app.DTO.VoteBoardDto;
+import com.bb.app.Mapper.BoardDetailMapper;
 import com.bb.app.Mapper.BoardMapper;
+import com.bb.app.Mapper.VoteBoardDetailMapper;
 import com.bb.app.Mapper.VoteBoardMapper;
-import com.bb.app.entity.BoardEntity;
-import com.bb.app.entity.MemberEntity;
-import com.bb.app.entity.VoteBoardEntity;
-import com.bb.app.repository.BoardRepository;
-import com.bb.app.repository.MemberRepository;
-import com.bb.app.repository.VoteBoardRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.bb.app.constant.AttachHandler;
+import com.bb.app.entity.*;
+import com.bb.app.repository.*;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.EntityManager;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
+@Transactional
+@Slf4j
 public class BoardService {
 
     private final BoardRepository boardRepository;
     private final VoteBoardRepository vBoardRepository;
     private final MemberRepository memberRepository;
-    Logger logger = LoggerFactory.getLogger(getClass());
-
-    public BoardService(BoardRepository boardRepository, VoteBoardRepository vBoardRepository, MemberRepository memberRepository){
-        this.boardRepository = boardRepository;
-        this.vBoardRepository = vBoardRepository;
-        this.memberRepository = memberRepository;
-    }
+    private final AttachHandler attachHandler;
+    private final EntityManager entityManager;
+    private final VoteAttachRepository voteAttachRepository;
+    private final BoardAttachRepository boardAttachRepository;
+    private final BoardDetailMapper boardDetailMapper;
+    private final VoteBoardDetailMapper voteBoardDetailMapper;
 
     //trateBoard 서비스
-    @Transactional
-    public void writeBoard(BoardDto boardDto){
+    public void writeBoard(List<MultipartFile> files, BoardDto boardDto) throws Exception {
         BoardEntity boardEntity = BoardMapper.INSTANCE.toEntity(boardDto);
+        entityManager.flush();
+
+        List<BoardAttachEntity> boardAttachEntityList = attachHandler.parseFileInfToBoardAttach(files);
+
+        boardEntity.addBoardAttachList(boardAttachEntityList);
         Optional<MemberEntity> member = memberRepository.findById(boardDto.getMember());
+
         MemberEntity memberEntity = member.get();
         memberEntity.UpdateboardList(boardEntity);
-
     }
 
-    public BoardDto TradeboardView(long bno){
+    @Transactional(readOnly = true)
+    public BoardDetailDto TradeboardView(long bno){
         Optional<BoardEntity> board = boardRepository.findById(bno);
         BoardEntity boardEntity = board.get();
-        BoardDto boardDto = BoardMapper.INSTANCE.toDto(boardEntity);
-        return  boardDto;
+        BoardDetailDto boardDetailDto = boardDetailMapper.toDto(boardEntity);
+
+
+        if(boardEntity.getAttach().size()==0) {
+            Long defaultImageId = 20L;
+
+            Optional<BoardAttachEntity> boardAttach = boardAttachRepository.findById(defaultImageId);
+            String defaultImagePath = boardAttach.get().getFilePath();
+
+            boardDetailDto.insertDefaultImagePath(defaultImagePath);
+        } else {
+            boardDetailDto.insertImagePath(boardEntity.getAttach());
+        }
+
+        return  boardDetailDto;
     }
-    @Transactional
+
     public void TradeboardUpdate(long bno, BoardDto boardDto){
         Optional<BoardEntity> board = boardRepository.findById(bno);
         BoardEntity boardUpdate = board.get();
@@ -57,34 +81,76 @@ public class BoardService {
         boardUpdate.UpdateTile(boardDto.getTitle());
 
     }
-    @Transactional
+
     public void BoardDelete(Long id){
         boardRepository.deleteById(id);
     }
+
     public List<BoardDto> TradeboardList(){
         List<BoardEntity> entityList = boardRepository.findAll();
-        List<BoardDto> boardList = BoardMapper.INSTANCE.toDtoList(entityList);
+        List<BoardDto> boardList = new ArrayList<>();
+
+        for(BoardEntity board : entityList) {
+            if(board.getAttach().size()==0) {
+                Long defaultImageId = 19L;
+
+                Optional<BoardAttachEntity> boardAttach = boardAttachRepository.findById(defaultImageId);
+                String defaultImagePath = boardAttach.get().getFilePath();
+
+                BoardDto boardDto = BoardMapper.INSTANCE.toDto(board);
+                boardDto.insertImagePath(defaultImagePath);
+
+                boardList.add(boardDto);
+            } else {
+                String imagePath = board.getAttach().get(0).getFilePath();
+
+                BoardDto boardDto = BoardMapper.INSTANCE.toDto(board);
+                boardDto.insertImagePath(imagePath);
+
+                boardList.add(boardDto);
+            }
+        }
+
         return boardList;
     }
 
 
 
     //voteBoard 서비스
-    @Transactional
-    public void writeVoteBoard(VoteBoardDto boardDto){
-        VoteBoardEntity boardEntity = VoteBoardMapper.INSTANCE.toEntity(boardDto);
-        Optional<MemberEntity> member = memberRepository.findById(boardDto.getMember());
+    public void writeVoteBoard(List<MultipartFile> files, VoteBoardDto voteBoardDto) throws Exception {
+        VoteBoardEntity voteBoardEntity = VoteBoardMapper.INSTANCE.toEntity(voteBoardDto);
+        entityManager.flush();
+
+        List<VoteAttachEntity> voteAttachEntityList = attachHandler.parseFileInfoToVoteAttach(files);
+
+        voteBoardEntity.addBoardAttachList(voteAttachEntityList);
+        Optional<MemberEntity> member = memberRepository.findById(voteBoardDto.getMember());
+
         MemberEntity memberEntity = member.get();
-        memberEntity.UpdatevoteBoardList(boardEntity);
+        memberEntity.UpdatevoteBoardList(voteBoardEntity);
 
     }
-    public VoteBoardDto VoteboardView(long bno){
-        Optional<VoteBoardEntity> board = vBoardRepository.findById(bno);
-        VoteBoardEntity boardEntity = board.get();
-        VoteBoardDto boardDto = VoteBoardMapper.INSTANCE.toDto(boardEntity);
-        return  boardDto;
+
+    @Transactional(readOnly = true)
+    public VoteBoardDetailDto VoteboardView(long bno){
+        Optional<VoteBoardEntity> voteBoard = vBoardRepository.findById(bno);
+        VoteBoardEntity voteBoardEntity = voteBoard.get();
+        VoteBoardDetailDto voteBoardDetailDto = voteBoardDetailMapper.toDto(voteBoardEntity);
+
+        if(voteBoardEntity.getAttach().size()==0) {
+            Long defaultImageId = 18L;
+
+            Optional<VoteAttachEntity> voteAttach = voteAttachRepository.findById(defaultImageId);
+            String defaultImagePath = voteAttach.get().getFilePath();
+
+            voteBoardDetailDto.insertDefaultImagePath(defaultImagePath);
+        } else {
+            voteBoardDetailDto.insertImagePath(voteBoardEntity.getAttach());
+        }
+
+        return  voteBoardDetailDto;
     }
-    @Transactional
+
     public void VoteboardUpdate(long bno, VoteBoardDto board){
         Optional<VoteBoardEntity> boardEntity = vBoardRepository.findById(bno);
         VoteBoardEntity boardUpdate = boardEntity.get();
@@ -92,13 +158,36 @@ public class BoardService {
         boardUpdate.UpdateTile(board.getTitle());
         boardUpdate.UpdateContent(board.getContent());
     }
-    @Transactional
+
     public void VoteBoardDelete(Long id){
         vBoardRepository.deleteById(id);
     }
+
     public List<VoteBoardDto> VoteboardList(){
         List<VoteBoardEntity> entityList = vBoardRepository.findAll();
-        List<VoteBoardDto> boardList = VoteBoardMapper.INSTANCE.toDtoList(entityList);
+        List<VoteBoardDto> boardList = new ArrayList<>();
+
+        for(VoteBoardEntity voteBoard : entityList) {
+            if(voteBoard.getAttach().size()==0) {
+                Long defaultImageId = 18L;
+
+                Optional<VoteAttachEntity> voteAttach = voteAttachRepository.findById(defaultImageId);
+                String defaultImagePath = voteAttach.get().getFilePath();
+
+                VoteBoardDto voteBoardDto = VoteBoardMapper.INSTANCE.toDto(voteBoard);
+                voteBoardDto.insertImagePath(defaultImagePath);
+
+                boardList.add(voteBoardDto);
+            } else {
+                String imagePath = voteBoard.getAttach().get(0).getFilePath();
+
+                VoteBoardDto voteBoardDto = VoteBoardMapper.INSTANCE.toDto(voteBoard);
+                voteBoardDto.insertImagePath(imagePath);
+
+                boardList.add(voteBoardDto);
+            }
+        }
+
         return boardList;
     }
 }

@@ -2,7 +2,6 @@ package com.bb.app.member;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-
 import com.bb.app.DTO.MemberDto;
 import com.bb.app.Mapper.MemberMapper;
 import com.bb.app.DTO.MessageDto;
