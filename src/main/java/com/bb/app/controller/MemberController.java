@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.*;
 
 @RestController
-@RequestMapping("/user/*")
+@RequestMapping("/user")
 @RequiredArgsConstructor
 @Slf4j
 public class MemberController {
