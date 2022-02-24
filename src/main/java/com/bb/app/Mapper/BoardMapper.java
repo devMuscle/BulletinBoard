@@ -13,8 +13,10 @@ public interface BoardMapper {
     BoardMapper INSTANCE = Mappers.getMapper(BoardMapper.class);
 
     @Mapping(source = "member", target = "member.id")
+    @Mapping(source = "writer", target = "member.nickName")
     BoardEntity toEntity(BoardDto boardDto);
     @Mapping(source = "member.id", target = "member")
+    @Mapping(source = "member.nickName", target = "writer")
     BoardDto toDto(BoardEntity boardEntity);
 
     List<BoardEntity> toEntityList(List<BoardDto> DtoList);

@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -36,14 +37,17 @@ public class VoteBoardEntity extends BaseTimeEntity {
     private MemberEntity member;
 
     @OneToMany(mappedBy = "voteBoard", cascade = CascadeType.ALL , orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<VoteAttachEntity> attach;
+    @Builder.Default
+    private List<VoteAttachEntity> attach = new ArrayList<>();;
 
     @OneToMany(mappedBy = "voteBoard", cascade = CascadeType.ALL , orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<VoteReplyEntity> replyList;
+    @Builder.Default
+    private List<VoteReplyEntity> replyList = new ArrayList<>();;
 
     public void UpdateTile(String newTile){
         this.title = newTile;
     }
+
     public void UpdateContent(String newContent){
         this.content = newContent;
     }
@@ -52,4 +56,10 @@ public class VoteBoardEntity extends BaseTimeEntity {
         replyList.add(msg);
     }
 
+    public void addBoardAttachList(List<VoteAttachEntity> voteAttachEntityList) {
+        for(VoteAttachEntity voteAttachEntity : voteAttachEntityList) {
+            voteAttachEntity.insertBoardId(this);
+            attach.add(voteAttachEntity);
+        }
+    }
 }

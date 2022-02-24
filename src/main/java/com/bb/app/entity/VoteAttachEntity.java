@@ -25,4 +25,8 @@ public class VoteAttachEntity extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "vote_board_id")
     private VoteBoardEntity voteBoard;
+
+    public void insertBoardId(VoteBoardEntity voteboard) {
+        this.voteBoard = voteboard;
+    }
 }

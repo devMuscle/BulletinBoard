@@ -22,8 +22,13 @@ public class BoardDto {
     private String title;
     private String content;
     private LocalDateTime registerDate;
-    private int viewCount = 0;
+    private int viewCount;
     private String writer;
     private Long member;
+    private String imagePath;
+
+    public void insertImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
 
 }
