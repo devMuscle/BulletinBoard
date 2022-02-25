@@ -15,8 +15,11 @@ public interface VoteBoardMapper {
     VoteBoardMapper INSTANCE = Mappers.getMapper(VoteBoardMapper.class);
 
     @Mapping(source = "member", target = "member.id")
+    @Mapping(source = "writer", target = "member.nickName")
     VoteBoardEntity toEntity(VoteBoardDto voteBoardDto);
+
     @Mapping(source = "member.id", target = "member")
+    @Mapping(source = "member.nickName", target = "writer")
     VoteBoardDto toDto(VoteBoardEntity voteBoardEntity);
 
     List<VoteBoardEntity> toEntityList(List<VoteBoardDto> DtoList);

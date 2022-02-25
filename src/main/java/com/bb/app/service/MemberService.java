@@ -7,6 +7,7 @@ import com.bb.app.Mapper.MemberMapper;
 import com.bb.app.Mapper.MyBoardMapper;
 import com.bb.app.entity.BoardEntity;
 import com.bb.app.entity.MemberEntity;
+import com.bb.app.entity.VoteBoardEntity;
 import com.bb.app.exception.DeleteException;
 import com.bb.app.exception.DuplicatedIdException;
 import com.bb.app.repository.MemberRepository;
@@ -29,6 +30,7 @@ public class MemberService {
 
     public void signup(MemberDto memberDto) {
         MemberEntity memberEntity = memberMapper.toEntity(memberDto);
+
         memberRepository.save(memberEntity);
     }
 
@@ -44,6 +46,7 @@ public class MemberService {
         Optional<MemberEntity> opMember = memberRepository.findByLoginIdAndPassword(id, pwd);
         MemberEntity memberEntity = opMember.orElseThrow();
         MemberDto memberDto = memberMapper.toDto(memberEntity);
+
         return memberDto;
     }
 
@@ -52,11 +55,14 @@ public class MemberService {
         Optional<MemberEntity> opMember = memberRepository.findByLoginId(loginId);
         MemberEntity memberEntity = opMember.orElseThrow();
         MemberDto memberDto = memberMapper.toDto(memberEntity);
+
         return memberDto;
     }
+
     public void memberUpdate(String loginId, MemberDto memberDto) {
         Optional<MemberEntity> opMember = memberRepository.findByLoginId(loginId);
         MemberEntity memberEntity = opMember.orElseThrow();
+
         if(!memberDto.getPassword().equals("")) {
             memberEntity.UpdatePassword(memberDto.getPassword());
         }
@@ -70,14 +76,29 @@ public class MemberService {
     public void memberDelete(String id) throws DeleteException{
         Optional<MemberEntity> member = memberRepository.findByLoginId(id);
         member.orElseThrow(() -> new DeleteException("삭제 실패"));
+
         memberRepository.deleteByLoginId(id);
     }
 
-    public List<MyBoardDto> findMyBoards(String loginId) {
+
+    public List<MyBoardDto> findMyTradeBoards(String loginId) {
         Optional<MemberEntity> opMember = memberRepository.findByLoginId(loginId);
         MemberEntity memberEntity = opMember.orElseThrow();
+
         List<BoardEntity> boardEntityList = memberEntity.getBoardList();
-        List<MyBoardDto> myBoardDtoList = myBoardMapper.toMyBoardDtoList(boardEntityList);
+        List<MyBoardDto> myBoardDtoList = myBoardMapper.boardListToMyBoardDtoList(boardEntityList);
+
         return myBoardDtoList;
     }
+
+    public List<MyBoardDto> findMyVoteBoards(String loginId) {
+        Optional<MemberEntity> opMember = memberRepository.findByLoginId(loginId);
+        MemberEntity memberEntity = opMember.orElseThrow();
+
+        List<VoteBoardEntity> voteBoardEntityList = memberEntity.getVoteBoardList();
+        List<MyBoardDto> myBoardDtoList = myBoardMapper.voteListToMyBoardDtoList(voteBoardEntityList);
+
+        return myBoardDtoList;
+    }
+
 }

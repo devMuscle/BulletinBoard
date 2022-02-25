@@ -1,13 +1,7 @@
 package com.bb.app.service;
 
-import com.bb.app.DTO.BoardDetailDto;
-import com.bb.app.DTO.BoardDto;
-import com.bb.app.DTO.VoteBoardDetailDto;
-import com.bb.app.DTO.VoteBoardDto;
-import com.bb.app.Mapper.BoardDetailMapper;
-import com.bb.app.Mapper.BoardMapper;
-import com.bb.app.Mapper.VoteBoardDetailMapper;
-import com.bb.app.Mapper.VoteBoardMapper;
+import com.bb.app.DTO.*;
+import com.bb.app.Mapper.*;
 import com.bb.app.constant.AttachHandler;
 import com.bb.app.entity.*;
 import com.bb.app.repository.*;
@@ -31,12 +25,19 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final VoteBoardRepository vBoardRepository;
     private final MemberRepository memberRepository;
-    private final AttachHandler attachHandler;
-    private final EntityManager entityManager;
     private final VoteAttachRepository voteAttachRepository;
     private final BoardAttachRepository boardAttachRepository;
+    private final BoardReplyRepository boardReplyRepository;
+    private final VoteReplyRepository voteReplyRepository;
+
+    private final AttachHandler attachHandler;
+
+    private final EntityManager entityManager;
+
     private final BoardDetailMapper boardDetailMapper;
     private final VoteBoardDetailMapper voteBoardDetailMapper;
+    private final ResBoardReplyMapper resBoardReplyMapper;
+    private final VoteReplyMapper voteReplyMapper;
 
     //trateBoard 서비스
     public void writeBoard(List<MultipartFile> files, BoardDto boardDto) throws Exception {
@@ -58,7 +59,7 @@ public class BoardService {
         BoardEntity boardEntity = board.get();
         BoardDetailDto boardDetailDto = boardDetailMapper.toDto(boardEntity);
 
-
+        //게시글 첨부 추가 부분
         if(boardEntity.getAttach().size()==0) {
             Long defaultImageId = 20L;
 
@@ -70,6 +71,12 @@ public class BoardService {
             boardDetailDto.insertImagePath(boardEntity.getAttach());
         }
 
+        //게시글 댓글 추가 부분
+        List<BoardReplyEntity> boardReplyEntityList = boardReplyRepository.selectAllByBoardNo(bno);
+        List<ResBoardReplyDto> resBoardReplyDtoList = resBoardReplyMapper.toDtoList(boardReplyEntityList);
+
+        boardDetailDto.insertResBoardReply(resBoardReplyDtoList);
+        
         return  boardDetailDto;
     }
 
@@ -147,6 +154,12 @@ public class BoardService {
         } else {
             voteBoardDetailDto.insertImagePath(voteBoardEntity.getAttach());
         }
+
+        //게시글 댓글 추가 부분
+        List<VoteReplyEntity> voteReplyEntityList = voteReplyRepository.selectAllByBoardNo(bno);
+        List<VoteReplyDto> voteReplyDtoList = voteReplyMapper.toDto(voteReplyEntityList);
+
+        voteBoardDetailDto.insertResBoardReply(voteReplyDtoList);
 
         return  voteBoardDetailDto;
     }

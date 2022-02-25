@@ -29,6 +29,8 @@ public class VoteBoardDetailDto {
     private Long memberId;
     @Builder.Default
     private List<String> imagePathList = new ArrayList<>();
+    @Builder.Default
+    private List<VoteReplyDto> voteReplyDtoList = new ArrayList<>();
 
     public void insertImagePath(List<VoteAttachEntity> voteAttachEntityList) {
         for(VoteAttachEntity voteAttachEntity : voteAttachEntityList) {
@@ -38,5 +40,11 @@ public class VoteBoardDetailDto {
 
     public void insertDefaultImagePath(String defaultImagePath) {
         this.imagePathList.add(defaultImagePath);
+    }
+
+    public void insertResBoardReply(List<VoteReplyDto> replyDtos) {
+        for(VoteReplyDto replyDto : replyDtos) {
+            this.voteReplyDtoList.add(replyDto);
+        }
     }
 }

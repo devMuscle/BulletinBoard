@@ -13,7 +13,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class SaveBoardReplyDto {
     private Long id;
-    private Long parentReplyId;
+    @Builder.Default
+    private Long parentReplyId = 0L;
     private Long boardNo;
     private Long writer;
     private LocalDateTime registerDate;

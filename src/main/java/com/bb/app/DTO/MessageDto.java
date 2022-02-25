@@ -25,10 +25,4 @@ public class MessageDto {
     private DeleteStatus receiveDeleteStatus;
     private DeleteStatus sendDeleteStatus;
 
-//    public void setSenderId(Long senderId){
-//        this.senderId = senderId;
-//    }
-//    public void setReceiverId(Long receiverId){
-//        this.receiverId = receiverId;
-//    }
 }

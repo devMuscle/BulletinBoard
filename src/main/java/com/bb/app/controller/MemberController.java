@@ -38,6 +38,7 @@ public class MemberController {
         } catch(DuplicatedIdException e) {
             response.put("msg", e.getMessage());
         }
+
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -45,6 +46,7 @@ public class MemberController {
     public ResponseEntity<MemberDto> login(@RequestBody MemberDto member) {
         try{
             MemberDto m = memberService.login(member.getLoginId(), member.getPassword());
+
             return new ResponseEntity<>(m, HttpStatus.OK);
         } catch(NoSuchElementException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -55,6 +57,7 @@ public class MemberController {
     public ResponseEntity<MemberDto> memberInfo(@PathVariable String loginId) {
         try {
             MemberDto memberDto = memberService.findMemberInfo(loginId);
+
             return new ResponseEntity<>(memberDto, HttpStatus.OK);
         } catch(NoSuchElementException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -68,9 +71,11 @@ public class MemberController {
         try{
             memberService.memberUpdate(loginId, memberDto);
             response.put("msg","정보변경 성공");
+
             return new ResponseEntity<>(response, HttpStatus.OK);
         }catch (NoSuchElementException e){
             response.put("msg","정보변경 실패");
+
             return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
         }
     }
@@ -81,6 +86,7 @@ public class MemberController {
         try{
             memberService.memberDelete(loginId);
             response.put("msg","삭제 성공");
+
             return new ResponseEntity<>(response, HttpStatus.NO_CONTENT);
         }catch (DeleteException e){
             response.put("msg",e.getMessage());
@@ -88,13 +94,26 @@ public class MemberController {
         }
     }
 
-    @GetMapping("/my-write/board/{loginId}")
-    public ResponseEntity<List<MyBoardDto>> myWriteBoard(@PathVariable String loginId){
+    @GetMapping("/my-write/boards/trade-board/{loginId}")
+    public ResponseEntity<List<MyBoardDto>> myWriteTradeBoard(@PathVariable String loginId){
         try{
-            List<MyBoardDto> myBoardDtoList = memberService.findMyBoards(loginId);
+            List<MyBoardDto> myBoardDtoList = memberService.findMyTradeBoards(loginId);
+
             return new ResponseEntity<>(myBoardDtoList, HttpStatus.OK);
         }catch (NoSuchElementException e){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+    @GetMapping("/my-write/boards/vote-board/{loginId}")
+    public ResponseEntity<List<MyBoardDto>> myWriteVoteBoard(@PathVariable String loginId){
+        try{
+            List<MyBoardDto> myBoardDtoList = memberService.findMyVoteBoards(loginId);
+
+            return new ResponseEntity<>(myBoardDtoList, HttpStatus.OK);
+        }catch (NoSuchElementException e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
 }
