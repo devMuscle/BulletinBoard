@@ -1,8 +1,7 @@
 package com.bb.app.DTO;
 
-import com.bb.app.constant.AgreeStatus;
+import com.bb.app.entity.BoardEntity;
 import com.bb.app.entity.MemberEntity;
-import com.bb.app.entity.VoteBoardEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,12 +13,11 @@ import java.time.LocalDateTime;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class VoteReplyDto {
+public class LoadBoardReplyDto {
     private Long id;
-    private Long parentReplyId = 0L;
-    private Long voteBoardId;               //조인
-    private Long memberId;                  //조인
+    private Long parentReplyId;
+    private Long boardNo;
+    private String writer;
     private LocalDateTime registerDate;
     private String comment;
-    private AgreeStatus agreeStatus;
 }

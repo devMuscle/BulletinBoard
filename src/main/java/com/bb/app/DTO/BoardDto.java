@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -21,10 +22,13 @@ public class BoardDto {
     private String title;
     private String content;
     private LocalDateTime registerDate;
-    private int viewCount = 0;
+    private int viewCount;
     private String writer;
-    private MemberEntity member;
+    private Long member;
+    private String imagePath;
 
-    private List<BoardAttachEntity> attach;
-    private List<BoardReplyEntity> replyList;
+    public void insertImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
+
 }

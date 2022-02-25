@@ -1,130 +1,98 @@
 package com.bb.app.controller;
 
-import com.bb.app.entity.BoardEntity;
-import com.bb.app.entity.VoteBoardEntity;
+import com.bb.app.DTO.BoardDetailDto;
+import com.bb.app.DTO.BoardDto;
+import com.bb.app.DTO.VoteBoardDetailDto;
+import com.bb.app.DTO.VoteBoardDto;
 import com.bb.app.service.BoardService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
 
 @RestController
 @RequestMapping("/boards")
+@Slf4j
+@RequiredArgsConstructor
 public class BoardController {
-    @Autowired
-    BoardService service;
 
-    Logger logger = LoggerFactory.getLogger(getClass());
+    private final BoardService service;
 
     //trade 게시판 컨트롤
-    @PostMapping("/trade-board/write")
-    public ResponseEntity<Void> TradeboardWrite(@RequestBody BoardEntity board){
-        //BoardEntity b = board;
-        service.writeBoard(board);
+    @PostMapping(value = "/trade-board/write")
+    public ResponseEntity<Void> TradeboardWrite(@RequestPart(required = false) List<MultipartFile> files, @RequestPart BoardDto board){
+        try{
+            service.writeBoard(files, board);
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        } catch(Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/trade-board/{bno}")
+    public BoardDetailDto TradeboardView(@PathVariable long bno){
+        BoardDetailDto board = service.TradeboardView(bno);
+        return board;
+    }
+
+    @PutMapping("/trade-board/{bno}")
+    public ResponseEntity<Void> TradeboardUpdate(@PathVariable long bno, @RequestBody BoardDto board){
+        service.TradeboardUpdate(bno, board);
 
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
-    @GetMapping("/trade-board/{bno}")
-    public Object TradeboardView(@PathVariable long bno){
-        Optional<BoardEntity> board;
-        board = service.TradeboardView(bno);
 
-        return board;
-    }
-    @PutMapping("/trade-board/{bno}")
-    public Map<String, String> TradeboardUpdate(@PathVariable long bno, @RequestBody BoardEntity board){
-
-        Map<String, String> respones = new HashMap<>();
-        Optional<BoardEntity> b = service.TradeboardUpdate(bno);
-        logger.info("bno : " + b.get().getId());
-        if(b.isPresent()){
-            BoardEntity updateBoard = b.get();
-            updateBoard.UpdateTile(board.getTitle());
-            updateBoard.UpdateContent(board.getContent());
-        //    service.BoardUpdate(updateBoard);
-            respones.put("msg","정보변경 성공");
-        }else{
-            respones.put("msg","정보변경 실패");
-        }
-
-        return respones;
-    }
     @DeleteMapping("/trade-board/{bno}")
-    @Transactional
-    public void TradeboardDelete(@PathVariable Long bno){
+    public ResponseEntity<Void> TradeboardDelete(@PathVariable Long bno){
         service.BoardDelete(bno);
+
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
-    @GetMapping("/trade-board/*")
-    public Object TradeboardList(){
-        List<BoardEntity> board = service.TradeboardList();
+
+    @GetMapping("/trade-board")
+    public List<BoardDto> TradeboardList(){
+        List<BoardDto> board = service.TradeboardList();
 
         return board;
     }
+
     //투표게시판 컨트롤러
     @PostMapping("/vote-board/write")
-    public ResponseEntity<Void> VoteboardWrite(@RequestBody VoteBoardEntity board){
-        String vbContent = board.getTitle();
-        logger.info(vbContent);
-        service.writeVoteBoard(board);
+    public ResponseEntity<Void> VoteboardWrite( @RequestPart(required = false) List<MultipartFile> files, @RequestPart VoteBoardDto board) {
+        try {
+            service.writeVoteBoard(files, board);
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/vote-board/{bno}")
+    public VoteBoardDetailDto VoteboardView(@PathVariable long bno){
+        VoteBoardDetailDto board = service.VoteboardView(bno);
+        return board;
+    }
+    @PutMapping("/vote-board/{bno}")
+    public ResponseEntity<Void> VoteboardUpdate(@PathVariable long bno, @RequestBody VoteBoardDto board){
+        service.VoteboardUpdate(bno, board);
 
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
-    @GetMapping("/vote-board/{bno}")
-    public Object VoteboardView(@PathVariable long bno){
-        Optional<VoteBoardEntity> vboard = service.VoteboardView(bno);
-
-        return vboard;
-    }
-    @PutMapping("/vote-board/{bno}")
-    public Map<String, String> VoteboardUpdate(@PathVariable long bno, @RequestBody VoteBoardEntity vboard){
-        Optional<VoteBoardEntity> vb = service.VoteboardUpdate(bno);
-        Map<String, String> response = new HashMap<>();
-        
-        if(vb.isPresent()){
-            VoteBoardEntity updateBoard = vb.get();
-            updateBoard.UpdateContent(vboard.getContent());
-            updateBoard.UpdateTile(vboard.getTitle());
-            service.VoteBoardUpdateSave(updateBoard);
-            response.put("msg","수정 성공");
-            logger.info(updateBoard.getTitle());
-
-        }else{
-            response.put("msg","수정 실패");
-        }
-        return response;
-    }
     @DeleteMapping("/vote-board/{bno}")
-    @Transactional
-    public void VoteboardDelete(@PathVariable long bno){
+    public ResponseEntity<Void> VoteboardDelete(@PathVariable Long bno){
         service.VoteBoardDelete(bno);
+
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
+    @GetMapping("/vote-board")
+    public List<VoteBoardDto> VoteboardList(){
+        List<VoteBoardDto> board = service.VoteboardList();
 
-    @GetMapping("/vote-board/*")
-    public Object VoteboardList(){
-        List<VoteBoardEntity> vb = service.VoteboardList();
-
-        return vb;
+        return board;
     }
-    //전체 계시판 조회
-    @GetMapping("/*")
-    public Map<String, Object> boardList(){
-        List<BoardEntity> tb = service.TradeboardList();
-        List<VoteBoardEntity> vb = service.VoteboardList();
-
-        Map<String, Object> response = new HashMap<>();
-
-        response.put("투표", vb);
-        response.put("거래", tb);
-
-        return response;
-    }
-    //정렬은? Map<object, object> rs = new hashMAp<>();
-    // rs.put(tb, vb);
 }

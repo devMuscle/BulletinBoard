@@ -2,7 +2,6 @@ package com.bb.app.entity;
 
 import com.bb.app.constant.DeleteStatus;
 import com.bb.app.constant.ReadStatus;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,6 +10,7 @@ import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Entity
 @Getter
@@ -46,5 +46,12 @@ public class MessageEntity extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     @ColumnDefault("UNDELETE")
     private DeleteStatus sendDeleteStatus;
+
+//    public void setSender(MemberEntity sender){
+//        this.sender = sender;
+//    }
+//    public void setReceiver(MemberEntity receiver){
+//        this.receiver = receiver;
+//    }
 
 }
