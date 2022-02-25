@@ -9,20 +9,14 @@ import com.bb.app.Mapper.MessageMapper;
 import com.bb.app.entity.MessageEntity;
 import org.apache.catalina.authenticator.SavedRequest;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import com.bb.app.entity.MemberEntity;
 import com.bb.app.repository.MemberRepository;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
-
 @SpringBootTest
+@Slf4j
 class MemberRepositoryTest {
 
     @Autowired
