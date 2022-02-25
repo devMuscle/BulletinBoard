@@ -1,125 +1,100 @@
 package com.bb.app.controller;
 
-import com.bb.app.entity.BoardEntity;
-import com.bb.app.entity.MemberEntity;
+import com.bb.app.DTO.MemberDto;
+import com.bb.app.DTO.MyBoardDto;
+import com.bb.app.exception.DeleteException;
 import com.bb.app.exception.DuplicatedIdException;
-import com.bb.app.service.BoardService;
 import com.bb.app.service.MemberService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
 @RestController
-@RequestMapping("/user/*")
+@RequestMapping("/user")
+@RequiredArgsConstructor
+@Slf4j
 public class MemberController {
 
-    @Autowired
-    private MemberService service;
-    @Autowired
-    private BoardService bservice;
-    Logger logger = LoggerFactory.getLogger(getClass());
+    private final MemberService memberService;
 
     @PostMapping("/signup")
-    public ResponseEntity<Void> Signup(@RequestBody MemberEntity member) {
-        MemberEntity m = member;
-        service.Signup(m);
-
-
+    public ResponseEntity<Void> signup(@RequestBody MemberDto member) {
+        memberService.signup(member);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-
     @GetMapping("/idcheck")
-    public Map<String, String> IdCheck(String id) {
+    public ResponseEntity<Map<String, String>> idCheck(String loginId) {
         Map<String, String> response = new HashMap<>();
 
         try {
-            service.IdCheck(id);
+            memberService.idCheck(loginId);
             response.put("msg","사용가능한 아이디 입니다");
         } catch(DuplicatedIdException e) {
             response.put("msg", e.getMessage());
         }
-
-        return response;
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PostMapping("/login")
-    public Map<String, String> Login(@RequestBody MemberEntity member) {
-        Map<String, String> response = new HashMap<>();
-
-        logger.info("id : " + member.getLoginId() + ", password : " + member.getPassword());
-
-        Optional<MemberEntity> m = service.Login(member.getLoginId(), member.getPassword());
-
-        if(m.isPresent()) {
-            response.put("msg","로그인 성공");
-        } else {
-            response.put("msg","로그인 실패");
+    public ResponseEntity<MemberDto> login(@RequestBody MemberDto member) {
+        try{
+            MemberDto m = memberService.login(member.getLoginId(), member.getPassword());
+            return new ResponseEntity<>(m, HttpStatus.OK);
+        } catch(NoSuchElementException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-
-        return response;
     }
 
     @GetMapping("/{loginId}")
-    public Object MemberInfo(@PathVariable String loginId) {
-
-        logger.info("loginId : " + loginId);
-
-        Optional<MemberEntity> m = service.FindInfo(loginId);
-
-        MemberEntity member = m.get();
-
-        return member;
+    public ResponseEntity<MemberDto> memberInfo(@PathVariable String loginId) {
+        try {
+            MemberDto memberDto = memberService.findMemberInfo(loginId);
+            return new ResponseEntity<>(memberDto, HttpStatus.OK);
+        } catch(NoSuchElementException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @PutMapping("/{loginId}")
-    public Map<String, String> MemberUpdate(@PathVariable String loginId, @RequestBody MemberEntity member) {
-
+    public ResponseEntity<Map<String, String>> memberUpdate(@PathVariable String loginId, @RequestBody MemberDto memberDto) {
         Map<String, String> response = new HashMap<>();
-        Optional<MemberEntity> m = service.FindInfo(loginId);
 
-        if(m.isPresent()) {
-            MemberEntity updateMember = m.get();
-            updateMember.UpdatePassword(member.getPassword());
-            updateMember.UpdateNickname(member.getNickName());
-            updateMember.UpdateEmail(member.getEmail());
-            service.MemberUpdate(updateMember);
+        try{
+            memberService.memberUpdate(loginId, memberDto);
             response.put("msg","정보변경 성공");
-        }else {
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }catch (NoSuchElementException e){
             response.put("msg","정보변경 실패");
+            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
         }
-        logger.info("loginId : " + loginId);
-
-        return response;
     }
     @DeleteMapping("/{loginId}")
-    @Transactional
-    public Map<String, String> MemberDelete(@PathVariable String loginId){
+    public ResponseEntity<Map<String, String>> memberDelete(@PathVariable String loginId){
         Map<String, String> response = new HashMap<>();
-        service.MemberDelete(loginId);
 
-        Optional<MemberEntity> m = service.FindInfo(loginId);
-
-        if(m.isPresent()){
-            response.put("msg","삭제 실패");
-        }else{
+        try{
+            memberService.memberDelete(loginId);
             response.put("msg","삭제 성공");
+            return new ResponseEntity<>(response, HttpStatus.NO_CONTENT);
+        }catch (DeleteException e){
+            response.put("msg",e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
         }
-
-        return response;
     }
-    @GetMapping("/my-write/board/{loginId}")
-    public Object myWriteBoard(@PathVariable String loginId){
-        List<BoardEntity> board;
-        Optional<MemberEntity> m = service.FindInfo(loginId);
-        board = m.get().getBoardList();
 
-        return board;
+    @GetMapping("/my-write/board/{loginId}")
+    public ResponseEntity<List<MyBoardDto>> myWriteBoard(@PathVariable String loginId){
+        try{
+            List<MyBoardDto> myBoardDtoList = memberService.findMyBoards(loginId);
+            return new ResponseEntity<>(myBoardDtoList, HttpStatus.OK);
+        }catch (NoSuchElementException e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 }

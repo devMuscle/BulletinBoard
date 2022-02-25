@@ -1,7 +1,5 @@
 package com.bb.app.DTO;
 
-import com.bb.app.entity.BoardEntity;
-import com.bb.app.entity.MemberEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,12 +11,11 @@ import java.time.LocalDateTime;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class BoardReplyDto {
+public class SaveBoardReplyDto {
     private Long id;
-
-    private Long parentReplyId = 0L;
-    private BoardEntity board;
-    private MemberEntity writer;
+    private Long parentReplyId;
+    private Long boardNo;
+    private Long writer;
     private LocalDateTime registerDate;
     private String comment;
 }

@@ -37,6 +37,14 @@ public class MemberEntity extends BaseTimeEntity {
     @Builder.Default
     private List<MessageEntity> MessageList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "writer", cascade = CascadeType.ALL , orphanRemoval = true, fetch = FetchType.LAZY)
+    @Builder.Default
+    private List<BoardReplyEntity> BoardReplyList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "writer", cascade = CascadeType.ALL , orphanRemoval = true, fetch = FetchType.LAZY)
+    @Builder.Default
+    private List<VoteReplyEntity> VoteReplyList = new ArrayList<>();
+
     public void UpdatePassword(String newPassword){
         this.password = newPassword;
     }
@@ -46,5 +54,16 @@ public class MemberEntity extends BaseTimeEntity {
     public void UpdateNickname(String newNickname){
         this.nickName = newNickname;
     }
+
+    public void UpdateboardList(final BoardEntity board){
+        boardList.add(board);
+    }
+    public void UpdatevoteBoardList(final VoteBoardEntity vBoard){
+        voteBoardList.add(vBoard);
+    }
+    public void UpdateMessageList(final MessageEntity msg){
+        MessageList.add(msg);
+    }
+
 
 }

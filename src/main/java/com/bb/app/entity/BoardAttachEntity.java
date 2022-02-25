@@ -1,9 +1,6 @@
 package com.bb.app.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -25,4 +22,8 @@ public class BoardAttachEntity extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id")
     private BoardEntity board;
+
+    public void insertBoardId(BoardEntity board) {
+        this.board = board;
+    }
 }

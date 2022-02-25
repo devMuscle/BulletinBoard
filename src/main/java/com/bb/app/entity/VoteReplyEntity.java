@@ -28,12 +28,10 @@ public class VoteReplyEntity extends BaseTimeEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "vote_board_id")
-    @JsonIgnore
     private VoteBoardEntity voteBoard;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
-    @JsonIgnore
     private MemberEntity writer;
 
     private LocalDateTime registerDate;
