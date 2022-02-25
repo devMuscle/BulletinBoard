@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.reflect.Member;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,15 +49,50 @@ public class MessageService {
     public void MessageDelete(Long mno){
         messageRepository.deleteById(mno);
     }
-//    public List<MessageEntity> MessageSendBox(long mno){
-//        List<MessageEntity> msg = messageRepository.findBySenderId(mno);
-//
-//        return msg;
-//    }
-    public List<MessageDto> MessageInBox(long mno){
+
+    public List<MessageDto> MessageAllBox(String loginId){
+        Optional<MemberEntity> member = memberRepository.findByloginId(loginId);
+        Long mno = member.get().getId();
+        logger.info("서비스 mno : "+String.valueOf(mno));
+
+        List<MessageEntity> sentMsg = messageRepository.findBySenderId(mno);
+        List<MessageEntity> receiveMsg = messageRepository.findByReceiverId(mno);
+        List<MessageEntity> msgList = new ArrayList<>();
+//        logger.info(sentMsg.get().getReceiver());
+//        logger.info(receiveMsg.get().getReceiver());
+        msgList.addAll(sentMsg);
+        msgList.addAll(receiveMsg);
+        logger.info(String.valueOf(msgList));
+
+        List<MessageDto> msgDto = MessageMapper.INSTANCE.toDtoList(msgList);
+
+        return msgDto;
+    }
+
+    public List<MessageDto> MessageInBox(Long mno){
         List<MessageEntity> msg = messageRepository.findBySenderId(mno);
         List<MessageDto> msgList = MessageMapper.INSTANCE.toDtoList(msg);
         logger.info(String.valueOf(msgList.get(0).getSenderId()));
         return msgList;
     }
+
+    public List<MessageDto> MessageSent(Long mno){
+        List<MessageEntity> msg = messageRepository.findByReceiverId(mno);
+        List<MessageDto> msgList = MessageMapper.INSTANCE.toDtoList(msg);
+        logger.info(String.valueOf(msgList.get(0).getSenderId()));
+        return msgList;
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+

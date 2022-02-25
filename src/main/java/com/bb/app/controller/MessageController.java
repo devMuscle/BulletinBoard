@@ -13,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,8 +33,28 @@ public class MessageController {
         this.messageService = messageService;
         this.memberService = memberService;
     }
+    @GetMapping("/*")
+    public Object MsgAllBox(String loginId){
+        logger.info(loginId);
+        List<MessageDto> msgList = messageService.MessageAllBox(loginId);
+        return msgList;
+    }
 
-    @PostMapping("/write")
+    @GetMapping("/inbox/{mno}")
+    public Object MsgInBox(@PathVariable Long mno){
+        List<MessageDto> msgList = messageService.MessageInBox(mno);
+
+        logger.info("MsgInBox 컨트롤어: " + msgList.size());
+        return msgList;
+    }
+    @GetMapping("/sent/{mno}")
+    public Object MsgSent(@PathVariable Long mno){
+        List<MessageDto> msgList = messageService.MessageSent(mno);
+
+        logger.info("MsgInBox 컨트롤어: " + msgList.size());
+        return msgList;
+    }
+    @PostMapping("/*")
     public ResponseEntity<Void> MsgWrite(@RequestBody MessageDto msg){
         logger.info(String.valueOf("컨트롤러: " + msg.getSenderId()));
         messageService.MessageWrite(msg);
@@ -70,11 +92,5 @@ public class MessageController {
 //        logger.info(String.valueOf(msg));
 //        return msg;
 //    }
-    @GetMapping("/inbox/{mno}")
-    public Object MsgInBox(@PathVariable long mno){
-        List<MessageDto> msgList = messageService.MessageInBox(mno);
 
-        logger.info("MsgInBox 컨트롤어: " + msgList.size());
-        return msgList;
-    }
 }
