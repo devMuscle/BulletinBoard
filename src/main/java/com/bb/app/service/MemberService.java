@@ -2,12 +2,12 @@ package com.bb.app.service;
 
 import com.bb.app.DTO.MemberDto;
 import com.bb.app.DTO.MyBoardDto;
+import com.bb.app.DTO.MyReplyDto;
 import com.bb.app.Mapper.BoardMapper;
 import com.bb.app.Mapper.MemberMapper;
 import com.bb.app.Mapper.MyBoardMapper;
-import com.bb.app.entity.BoardEntity;
-import com.bb.app.entity.MemberEntity;
-import com.bb.app.entity.VoteBoardEntity;
+import com.bb.app.Mapper.MyReplyMapper;
+import com.bb.app.entity.*;
 import com.bb.app.exception.DeleteException;
 import com.bb.app.exception.DuplicatedIdException;
 import com.bb.app.repository.MemberRepository;
@@ -27,6 +27,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final MemberMapper memberMapper;
     private final MyBoardMapper myBoardMapper;
+    private final MyReplyMapper myReplyMapper;
 
     public void signup(MemberDto memberDto) {
         MemberEntity memberEntity = memberMapper.toEntity(memberDto);
@@ -100,5 +101,26 @@ public class MemberService {
 
         return myBoardDtoList;
     }
+
+    public List<MyReplyDto> findMyBoardReply(String loginId) {
+        Optional<MemberEntity> opMember = memberRepository.findByLoginId(loginId);
+        MemberEntity memberEntity = opMember.orElseThrow();
+
+        List<BoardReplyEntity> boardReplyEntityList = memberEntity.getBoardReplyList();
+        List<MyReplyDto> myReplyDtoList = myReplyMapper.boardReplyToDtoList(boardReplyEntityList);
+
+        return myReplyDtoList;
+    }
+
+    public List<MyReplyDto> findMyVoteReply(String loginId) {
+        Optional<MemberEntity> opMember = memberRepository.findByLoginId(loginId);
+        MemberEntity memberEntity = opMember.orElseThrow();
+
+        List<VoteReplyEntity> voteReplyEntityList = memberEntity.getVoteReplyList();
+        List<MyReplyDto> myReplyDtoList = myReplyMapper.voteReplyToDtoList(voteReplyEntityList);
+
+        return myReplyDtoList;
+    }
+
 
 }
