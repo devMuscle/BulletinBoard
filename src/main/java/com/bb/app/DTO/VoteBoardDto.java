@@ -19,17 +19,24 @@ import java.util.List;
 public class VoteBoardDto {
     private Long id;
 
+    @Builder.Default
     private int agreeCount = 0;
+
+    @Builder.Default
     private int disagreeCount = 0;
 
     private String title;
     private String content;
     private LocalDateTime registerDate;
+
+    @Builder.Default
     private int viewCount = 0;
+
     private String writer;
     private Long member;
+    private String imagePath;
 
-    private List<VoteAttachEntity> attach;
-
-    private List<VoteReplyEntity> replyList;
+    public void insertImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
 }

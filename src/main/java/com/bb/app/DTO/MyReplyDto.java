@@ -5,13 +5,14 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Builder
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor
-public class MyBoardDto {
-    private Long id;
-    private String title;
-    private String writer;
-    private int view;
+@AllArgsConstructor
+public class MyReplyDto {
+    String comment;
+    String nickName;
+    LocalDateTime registerDate;
 }

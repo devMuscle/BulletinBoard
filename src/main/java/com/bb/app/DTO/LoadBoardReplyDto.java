@@ -13,12 +13,11 @@ import java.time.LocalDateTime;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class BoardReplyDto {
+public class LoadBoardReplyDto {
     private Long id;
-
-    private Long parentReplyId = 0L;
-    private BoardEntity board;
-    private MemberEntity writer;
+    private Long parentReplyId;
+    private Long boardNo;
+    private String writer;
     private LocalDateTime registerDate;
     private String comment;
 }
