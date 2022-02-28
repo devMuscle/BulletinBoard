@@ -51,7 +51,7 @@ public class MessageService {
     }
 
     public List<MessageDto> MessageAllBox(String loginId){
-        Optional<MemberEntity> member = memberRepository.findByloginId(loginId);
+        Optional<MemberEntity> member = memberRepository.findByLoginId(loginId);
         Long mno = member.get().getId();
         logger.info("서비스 mno : "+String.valueOf(mno));
 
