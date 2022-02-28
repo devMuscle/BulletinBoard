@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import java.util.*;
 
 @RestController
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("/boards")
 public class BoardController {
     @Autowired

@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @RestController
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("/memo/*")
 public class MessageController {
     //@Autowired
