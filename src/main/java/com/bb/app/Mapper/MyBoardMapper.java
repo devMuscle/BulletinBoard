@@ -2,6 +2,7 @@ package com.bb.app.Mapper;
 
 import com.bb.app.DTO.MyBoardDto;
 import com.bb.app.entity.BoardEntity;
+import com.bb.app.entity.VoteBoardEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -11,7 +12,12 @@ import java.util.List;
 public interface MyBoardMapper {
 
     @Mapping(source = "member.nickName", target = "writer")
-    MyBoardDto toMyBoardDto(BoardEntity boardEntity);
+    MyBoardDto boardToMyBoardDto(BoardEntity boardEntity);
 
-    List<MyBoardDto> toMyBoardDtoList(List<BoardEntity> boardEntityLIst);
+    @Mapping(source = "member.nickName", target = "writer")
+    MyBoardDto voteBoardToMyBoardDto(VoteBoardEntity voteBoardEntity);
+
+    List<MyBoardDto> boardListToMyBoardDtoList(List<BoardEntity> boardEntityLIst);
+
+    List<MyBoardDto> voteListToMyBoardDtoList(List<VoteBoardEntity> voteBoardEntityList);
 }

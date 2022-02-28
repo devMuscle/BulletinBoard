@@ -19,13 +19,19 @@ import java.util.List;
 public class VoteBoardDto {
     private Long id;
 
-    private int agreeCount;
-    private int disagreeCount;
+    @Builder.Default
+    private int agreeCount = 0;
+
+    @Builder.Default
+    private int disagreeCount = 0;
 
     private String title;
     private String content;
     private LocalDateTime registerDate;
-    private int viewCount;
+
+    @Builder.Default
+    private int viewCount = 0;
+
     private String writer;
     private Long member;
     private String imagePath;

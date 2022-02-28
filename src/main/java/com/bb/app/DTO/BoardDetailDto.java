@@ -25,6 +25,8 @@ public class BoardDetailDto {
     private Long memberId;
     @Builder.Default
     private List<String> imagePathList = new ArrayList<>();
+    @Builder.Default
+    private List<ResBoardReplyDto> resBoardReplyList = new ArrayList<>();
 
     public void insertImagePath(List<BoardAttachEntity> boardAttachEntityList) {
         for(BoardAttachEntity boardAttachEntity : boardAttachEntityList) {
@@ -36,4 +38,9 @@ public class BoardDetailDto {
         this.imagePathList.add(defaultImagePath);
     }
 
+    public void insertResBoardReply(List<ResBoardReplyDto> replyDtos) {
+        for(ResBoardReplyDto replyDto : replyDtos) {
+            this.resBoardReplyList.add(replyDto);
+        }
+    }
 }

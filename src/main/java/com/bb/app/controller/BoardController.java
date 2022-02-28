@@ -73,10 +73,12 @@ public class BoardController {
     }
 
     @GetMapping("/vote-board/{bno}")
-    public VoteBoardDetailDto VoteboardView(@PathVariable long bno){
+    public ResponseEntity<VoteBoardDetailDto> VoteboardView(@PathVariable long bno){
         VoteBoardDetailDto board = service.VoteboardView(bno);
-        return board;
+
+        return new ResponseEntity<>(board, HttpStatus.OK);
     }
+
     @PutMapping("/vote-board/{bno}")
     public ResponseEntity<Void> VoteboardUpdate(@PathVariable long bno, @RequestBody VoteBoardDto board){
         service.VoteboardUpdate(bno, board);
