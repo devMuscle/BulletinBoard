@@ -2,6 +2,7 @@ package com.bb.app.controller;
 
 import com.bb.app.DTO.MemberDto;
 import com.bb.app.DTO.MyBoardDto;
+import com.bb.app.DTO.MyReplyDto;
 import com.bb.app.exception.DeleteException;
 import com.bb.app.exception.DuplicatedIdException;
 import com.bb.app.service.MemberService;
@@ -111,6 +112,26 @@ public class MemberController {
             List<MyBoardDto> myBoardDtoList = memberService.findMyVoteBoards(loginId);
 
             return new ResponseEntity<>(myBoardDtoList, HttpStatus.OK);
+        }catch (NoSuchElementException e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/my-write/comments/trade-comments/{loginId}")
+    public ResponseEntity<List<MyReplyDto>> myWriteBoardReply(@PathVariable String loginId){
+        try{
+            List<MyReplyDto> myReplyDtoList = memberService.findMyBoardReply(loginId);
+            return new ResponseEntity<>(myReplyDtoList, HttpStatus.OK);
+        }catch (NoSuchElementException e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/my-write/comments/vote-comments/{loginId}")
+    public ResponseEntity<List<MyReplyDto>> myWriteVoteReply(@PathVariable String loginId){
+        try{
+            List<MyReplyDto> myReplyDtoList = memberService.findMyVoteReply(loginId);
+            return new ResponseEntity<>(myReplyDtoList, HttpStatus.OK);
         }catch (NoSuchElementException e){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
