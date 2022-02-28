@@ -10,8 +10,9 @@ import com.bb.app.Mapper.MyReplyMapper;
 import com.bb.app.entity.*;
 import com.bb.app.exception.DeleteException;
 import com.bb.app.exception.DuplicatedIdException;
-import com.bb.app.repository.MemberRepository;
+import com.bb.app.repository.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +26,11 @@ import java.util.Optional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final BoardRepository boardRepository;
+    private final VoteBoardRepository voteBoardRepository;
+    private final BoardReplyRepository boardReplyRepository;
+    private final VoteReplyRepository voteReplyRepository;
+
     private final MemberMapper memberMapper;
     private final MyBoardMapper myBoardMapper;
     private final MyReplyMapper myReplyMapper;
@@ -82,41 +88,46 @@ public class MemberService {
     }
 
 
-    public List<MyBoardDto> findMyTradeBoards(String loginId) {
+    public List<MyBoardDto> findMyTradeBoards(String loginId, Pageable pageable) {
         Optional<MemberEntity> opMember = memberRepository.findByLoginId(loginId);
         MemberEntity memberEntity = opMember.orElseThrow();
+        Long memberId = memberEntity.getId();
 
-        List<BoardEntity> boardEntityList = memberEntity.getBoardList();
+        List<BoardEntity> boardEntityList = boardRepository.findAllByMemberId(memberId, pageable);
+
         List<MyBoardDto> myBoardDtoList = myBoardMapper.boardListToMyBoardDtoList(boardEntityList);
 
         return myBoardDtoList;
     }
 
-    public List<MyBoardDto> findMyVoteBoards(String loginId) {
+    public List<MyBoardDto> findMyVoteBoards(String loginId, Pageable pageable) {
         Optional<MemberEntity> opMember = memberRepository.findByLoginId(loginId);
         MemberEntity memberEntity = opMember.orElseThrow();
+        Long memberId = memberEntity.getId();
 
-        List<VoteBoardEntity> voteBoardEntityList = memberEntity.getVoteBoardList();
+        List<VoteBoardEntity> voteBoardEntityList = voteBoardRepository.findAllByMemberId(memberId, pageable);
         List<MyBoardDto> myBoardDtoList = myBoardMapper.voteListToMyBoardDtoList(voteBoardEntityList);
 
         return myBoardDtoList;
     }
 
-    public List<MyReplyDto> findMyBoardReply(String loginId) {
+    public List<MyReplyDto> findMyBoardReply(String loginId, Pageable pageable) {
         Optional<MemberEntity> opMember = memberRepository.findByLoginId(loginId);
         MemberEntity memberEntity = opMember.orElseThrow();
+        Long memberId = memberEntity.getId();
 
-        List<BoardReplyEntity> boardReplyEntityList = memberEntity.getBoardReplyList();
+        List<BoardReplyEntity> boardReplyEntityList = boardReplyRepository.findAllByMemberId(memberId, pageable);
         List<MyReplyDto> myReplyDtoList = myReplyMapper.boardReplyToDtoList(boardReplyEntityList);
 
         return myReplyDtoList;
     }
 
-    public List<MyReplyDto> findMyVoteReply(String loginId) {
+    public List<MyReplyDto> findMyVoteReply(String loginId, Pageable pageable) {
         Optional<MemberEntity> opMember = memberRepository.findByLoginId(loginId);
         MemberEntity memberEntity = opMember.orElseThrow();
+        Long memberId = memberEntity.getId();
 
-        List<VoteReplyEntity> voteReplyEntityList = memberEntity.getVoteReplyList();
+        List<VoteReplyEntity> voteReplyEntityList = voteReplyRepository.findAllByMemberId(memberId, pageable);
         List<MyReplyDto> myReplyDtoList = myReplyMapper.voteReplyToDtoList(voteReplyEntityList);
 
         return myReplyDtoList;
