@@ -121,7 +121,7 @@ public class MemberController {
     }
 
     @GetMapping("/my-write/comments/trade-comments/{loginId}")
-    public ResponseEntity<List<MyReplyDto>> myWriteBoardReply(@PathVariable String loginId, @PageableDefault(size = 5) Pageable pageable){
+    public ResponseEntity<List<MyReplyDto>> myWriteBoardReply(@PathVariable String loginId, @PageableDefault(size = 12) Pageable pageable){
         try{
             List<MyReplyDto> myReplyDtoList = memberService.findMyBoardReply(loginId, pageable);
             return new ResponseEntity<>(myReplyDtoList, HttpStatus.OK);
@@ -131,7 +131,7 @@ public class MemberController {
     }
 
     @GetMapping("/my-write/comments/vote-comments/{loginId}")
-    public ResponseEntity<List<MyReplyDto>> myWriteVoteReply(@PathVariable String loginId, @PageableDefault(size = 5) Pageable pageable){
+    public ResponseEntity<List<MyReplyDto>> myWriteVoteReply(@PathVariable String loginId, @PageableDefault(size = 12) Pageable pageable){
         try{
             List<MyReplyDto> myReplyDtoList = memberService.findMyVoteReply(loginId, pageable);
             return new ResponseEntity<>(myReplyDtoList, HttpStatus.OK);

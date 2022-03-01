@@ -32,21 +32,21 @@ public class MessageController {
     private final MessageService messageService;
 
     @GetMapping("")
-    public Object MsgAllBox(String loginId, @PageableDefault(size = 5) Pageable pageable){
+    public Object MsgAllBox(String loginId, @PageableDefault(size = 8) Pageable pageable){
         List<MessageDto> msgList = messageService.MessageAllBox(loginId, pageable);
         return msgList;
     }
 
 
     @GetMapping("/inbox/{loginId}")
-    public Object MsgInBox(@PathVariable String loginId, @PageableDefault(size = 5) Pageable pageable){
+    public Object MsgInBox(@PathVariable String loginId, @PageableDefault(size = 8) Pageable pageable){
         List<MessageDto> msgList = messageService.MessageInBox(loginId, pageable);
 
         return msgList;
     }
 
     @GetMapping("/sent/{loginId}")
-    public Object MsgSent(@PathVariable String loginId, @PageableDefault(size = 5) Pageable pageable){
+    public Object MsgSent(@PathVariable String loginId, @PageableDefault(size = 8) Pageable pageable){
         List<MessageDto> msgList = messageService.MessageSent(loginId, pageable);
 
         return msgList;

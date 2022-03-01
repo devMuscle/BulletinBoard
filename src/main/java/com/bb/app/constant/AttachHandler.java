@@ -116,7 +116,8 @@ public class AttachHandler {
             String absolutePath = new File("").getAbsolutePath() + File.separator;
 
             // 파일을 저장할 세부 경로 지정
-            String path = "images" + File.separator + "VoteBoardAttach" + File.separator + current_date;
+           // String path = "images" + File.separator + "VoteBoardAttach" + File.separator + current_date;
+            String path = "src" + File.separator + "main" + File.separator + "resources" + File.separator + "static";
             File file = new File(path);
 
             // 디렉터리가 존재하지 않을 경우
