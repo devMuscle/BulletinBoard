@@ -9,6 +9,8 @@ import com.bb.app.service.MemberService;
 import lombok.RequiredArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -97,9 +99,9 @@ public class MemberController {
     }
 
     @GetMapping("/my-write/boards/trade-board/{loginId}")
-    public ResponseEntity<List<MyBoardDto>> myWriteTradeBoard(@PathVariable String loginId){
+    public ResponseEntity<List<MyBoardDto>> myWriteTradeBoard(@PathVariable String loginId, @PageableDefault(size = 5) Pageable pageable){
         try{
-            List<MyBoardDto> myBoardDtoList = memberService.findMyTradeBoards(loginId);
+            List<MyBoardDto> myBoardDtoList = memberService.findMyTradeBoards(loginId, pageable);
 
             return new ResponseEntity<>(myBoardDtoList, HttpStatus.OK);
         }catch (NoSuchElementException e){
@@ -108,9 +110,9 @@ public class MemberController {
     }
 
     @GetMapping("/my-write/boards/vote-board/{loginId}")
-    public ResponseEntity<List<MyBoardDto>> myWriteVoteBoard(@PathVariable String loginId){
+    public ResponseEntity<List<MyBoardDto>> myWriteVoteBoard(@PathVariable String loginId, @PageableDefault(size = 5) Pageable pageable){
         try{
-            List<MyBoardDto> myBoardDtoList = memberService.findMyVoteBoards(loginId);
+            List<MyBoardDto> myBoardDtoList = memberService.findMyVoteBoards(loginId, pageable);
 
             return new ResponseEntity<>(myBoardDtoList, HttpStatus.OK);
         }catch (NoSuchElementException e){
@@ -119,9 +121,9 @@ public class MemberController {
     }
 
     @GetMapping("/my-write/comments/trade-comments/{loginId}")
-    public ResponseEntity<List<MyReplyDto>> myWriteBoardReply(@PathVariable String loginId){
+    public ResponseEntity<List<MyReplyDto>> myWriteBoardReply(@PathVariable String loginId, @PageableDefault(size = 12) Pageable pageable){
         try{
-            List<MyReplyDto> myReplyDtoList = memberService.findMyBoardReply(loginId);
+            List<MyReplyDto> myReplyDtoList = memberService.findMyBoardReply(loginId, pageable);
             return new ResponseEntity<>(myReplyDtoList, HttpStatus.OK);
         }catch (NoSuchElementException e){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -129,9 +131,9 @@ public class MemberController {
     }
 
     @GetMapping("/my-write/comments/vote-comments/{loginId}")
-    public ResponseEntity<List<MyReplyDto>> myWriteVoteReply(@PathVariable String loginId){
+    public ResponseEntity<List<MyReplyDto>> myWriteVoteReply(@PathVariable String loginId, @PageableDefault(size = 12) Pageable pageable){
         try{
-            List<MyReplyDto> myReplyDtoList = memberService.findMyVoteReply(loginId);
+            List<MyReplyDto> myReplyDtoList = memberService.findMyVoteReply(loginId, pageable);
             return new ResponseEntity<>(myReplyDtoList, HttpStatus.OK);
         }catch (NoSuchElementException e){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

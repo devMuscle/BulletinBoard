@@ -1,6 +1,7 @@
 package com.bb.app.repository;
 
 import com.bb.app.entity.MemberEntity;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
