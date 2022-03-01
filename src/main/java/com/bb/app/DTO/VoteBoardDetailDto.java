@@ -30,6 +30,8 @@ public class VoteBoardDetailDto {
     @Builder.Default
     private List<String> imagePathList = new ArrayList<>();
     @Builder.Default
+    private List<String> fileNameList = new ArrayList<>();
+    @Builder.Default
     private List<VoteReplyDto> voteReplyDtoList = new ArrayList<>();
 
     public void insertImagePath(List<VoteAttachEntity> voteAttachEntityList) {
@@ -38,8 +40,18 @@ public class VoteBoardDetailDto {
         }
     }
 
+    public void insertFileName(List<VoteAttachEntity> voteAttachEntityList) {
+        for(VoteAttachEntity voteAttachEntity : voteAttachEntityList) {
+            this.fileNameList.add(voteAttachEntity.getFileName());
+        }
+    }
+
     public void insertDefaultImagePath(String defaultImagePath) {
         this.imagePathList.add(defaultImagePath);
+    }
+
+    public void insertDefaultFileName(String defaultFileName) {
+        this.fileNameList.add(defaultFileName);
     }
 
     public void insertResBoardReply(List<VoteReplyDto> replyDtos) {

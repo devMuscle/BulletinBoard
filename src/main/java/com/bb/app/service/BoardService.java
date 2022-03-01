@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityManager;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -46,11 +47,13 @@ public class BoardService {
 
         List<BoardAttachEntity> boardAttachEntityList = attachHandler.parseFileInfToBoardAttach(files);
 
+
         boardEntity.addBoardAttachList(boardAttachEntityList);
         Optional<MemberEntity> member = memberRepository.findById(boardDto.getMember());
 
         MemberEntity memberEntity = member.get();
         memberEntity.UpdateboardList(boardEntity);
+
     }
 
     @Transactional(readOnly = true)
@@ -61,14 +64,20 @@ public class BoardService {
 
         //게시글 첨부 추가 부분
         if(boardEntity.getAttach().size()==0) {
-            Long defaultImageId = 20L;
+            //Long defaultImageId = 37L;
 
-            Optional<BoardAttachEntity> boardAttach = boardAttachRepository.findById(defaultImageId);
-            String defaultImagePath = boardAttach.get().getFilePath();
+            //Optional<BoardAttachEntity> boardAttach = boardAttachRepository.findById(defaultImageId);
+            //String defaultImagePath = boardAttach.get().getFilePath();
+            //String defaultFileName = boardAttach.get().getFileName();
+            String defaultImagePath = "src" + File.separator + "main" + File.separator + "resources" + File.separator + "static" + File.separator + "default.png";
+            String defaultFileName = "default.png";
+
 
             boardDetailDto.insertDefaultImagePath(defaultImagePath);
+            boardDetailDto.insertDefaultFileName(defaultFileName);
         } else {
             boardDetailDto.insertImagePath(boardEntity.getAttach());
+            boardDetailDto.insertFileName(boardEntity.getAttach());
         }
 
         //게시글 댓글 추가 부분
@@ -99,20 +108,30 @@ public class BoardService {
 
         for(BoardEntity board : entityList) {
             if(board.getAttach().size()==0) {
-                Long defaultImageId = 19L;
+                /*
+                Long defaultImageId = 37L;
 
                 Optional<BoardAttachEntity> boardAttach = boardAttachRepository.findById(defaultImageId);
                 String defaultImagePath = boardAttach.get().getFilePath();
+                String defaultFileName = boardAttach.get().getFileName();
+
+                 */
+
+                String defaultImagePath = "src" + File.separator + "main" + File.separator + "resources" + File.separator + "static" + File.separator + "default.png";
+                String defaultFileName = "default.png";
 
                 BoardDto boardDto = BoardMapper.INSTANCE.toDto(board);
                 boardDto.insertImagePath(defaultImagePath);
+                boardDto.insertFileName(defaultFileName);
 
                 boardList.add(boardDto);
             } else {
                 String imagePath = board.getAttach().get(0).getFilePath();
+                String fileName = board.getAttach().get(0).getFileName();
 
                 BoardDto boardDto = BoardMapper.INSTANCE.toDto(board);
                 boardDto.insertImagePath(imagePath);
+                boardDto.insertFileName(fileName);
 
                 boardList.add(boardDto);
             }
@@ -131,10 +150,16 @@ public class BoardService {
         List<VoteAttachEntity> voteAttachEntityList = attachHandler.parseFileInfoToVoteAttach(files);
 
         voteBoardEntity.addBoardAttachList(voteAttachEntityList);
+
+        vBoardRepository.save(voteBoardEntity);
+
+
         Optional<MemberEntity> member = memberRepository.findById(voteBoardDto.getMember());
 
         MemberEntity memberEntity = member.get();
         memberEntity.UpdatevoteBoardList(voteBoardEntity);
+
+
 
     }
 
@@ -145,14 +170,21 @@ public class BoardService {
         VoteBoardDetailDto voteBoardDetailDto = voteBoardDetailMapper.toDto(voteBoardEntity);
 
         if(voteBoardEntity.getAttach().size()==0) {
-            Long defaultImageId = 18L;
+            /*
+            Long defaultImageId = 28L;
 
             Optional<VoteAttachEntity> voteAttach = voteAttachRepository.findById(defaultImageId);
             String defaultImagePath = voteAttach.get().getFilePath();
+            String defaultFileName = voteAttach.get().getFileName();
+             */
+            String defaultImagePath = "src" + File.separator + "main" + File.separator + "resources" + File.separator + "static" + File.separator + "default.png";
+            String defaultFileName = "default.png";
 
             voteBoardDetailDto.insertDefaultImagePath(defaultImagePath);
+            voteBoardDetailDto.insertDefaultFileName(defaultFileName);
         } else {
             voteBoardDetailDto.insertImagePath(voteBoardEntity.getAttach());
+            voteBoardDetailDto.insertFileName(voteBoardEntity.getAttach());
         }
 
         //게시글 댓글 추가 부분
@@ -182,20 +214,30 @@ public class BoardService {
 
         for(VoteBoardEntity voteBoard : entityList) {
             if(voteBoard.getAttach().size()==0) {
-                Long defaultImageId = 18L;
+                /*
+                Long defaultImageId = 28L;
 
                 Optional<VoteAttachEntity> voteAttach = voteAttachRepository.findById(defaultImageId);
                 String defaultImagePath = voteAttach.get().getFilePath();
+                String defauiltFileName = voteAttach.get().getFileName();
+
+                 */
+                String defaultImagePath = "src" + File.separator + "main" + File.separator + "resources" + File.separator + "static" + File.separator + "default.png";
+                String defaultFileName = "default.png";
+
 
                 VoteBoardDto voteBoardDto = VoteBoardMapper.INSTANCE.toDto(voteBoard);
                 voteBoardDto.insertImagePath(defaultImagePath);
+                voteBoardDto.insertFileName(defaultFileName);
 
                 boardList.add(voteBoardDto);
             } else {
                 String imagePath = voteBoard.getAttach().get(0).getFilePath();
+                String fileName = voteBoard.getAttach().get(0).getFileName();
 
                 VoteBoardDto voteBoardDto = VoteBoardMapper.INSTANCE.toDto(voteBoard);
                 voteBoardDto.insertImagePath(imagePath);
+                voteBoardDto.insertFileName(fileName);
 
                 boardList.add(voteBoardDto);
             }

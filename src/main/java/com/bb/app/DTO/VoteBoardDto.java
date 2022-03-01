@@ -35,8 +35,13 @@ public class VoteBoardDto {
     private String writer;
     private Long member;
     private String imagePath;
+    private String fileName;
 
     public void insertImagePath(String imagePath) {
         this.imagePath = imagePath;
+    }
+
+    public void insertFileName(String fileName) {
+        this.fileName = fileName;
     }
 }
