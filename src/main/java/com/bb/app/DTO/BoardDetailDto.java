@@ -26,6 +26,8 @@ public class BoardDetailDto {
     @Builder.Default
     private List<String> imagePathList = new ArrayList<>();
     @Builder.Default
+    private List<String> fileNameList = new ArrayList<>();
+    @Builder.Default
     private List<ResBoardReplyDto> resBoardReplyList = new ArrayList<>();
 
     public void insertImagePath(List<BoardAttachEntity> boardAttachEntityList) {
@@ -34,8 +36,18 @@ public class BoardDetailDto {
         }
     }
 
+    public void insertFileName(List<BoardAttachEntity> boardAttachEntityList) {
+        for(BoardAttachEntity boardAttachEntity : boardAttachEntityList) {
+            this.fileNameList.add(boardAttachEntity.getFileName());
+        }
+    }
+
     public void insertDefaultImagePath(String defaultImagePath) {
         this.imagePathList.add(defaultImagePath);
+    }
+
+    public void insertDefaultFileName(String defaultFileName) {
+        this.fileNameList.add(defaultFileName);
     }
 
     public void insertResBoardReply(List<ResBoardReplyDto> replyDtos) {
