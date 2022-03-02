@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.*;
 
 @RestController
-@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("/user")
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 @RequiredArgsConstructor
 @Slf4j
 public class MemberController {
@@ -27,7 +27,9 @@ public class MemberController {
     @PostMapping("/signup")
     public ResponseEntity<Void> signup(@RequestBody MemberDto member) {
         memberService.signup(member);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        log.info(member.getLoginId());
+        log.info(member.getPassword());
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/idcheck")
@@ -46,6 +48,8 @@ public class MemberController {
 
     @PostMapping("/login")
     public ResponseEntity<MemberDto> login(@RequestBody MemberDto member) {
+        log.info("컨트롤러 비밀번 : "+member.getPassword());
+        log.info("컨트롤러 아이디 : "+member.getLoginId());
         try{
             MemberDto m = memberService.login(member.getLoginId(), member.getPassword());
 
