@@ -19,7 +19,7 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/user")
-@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+@CrossOrigin(origins = "http://ec2-13-209-50-25.ap-northeast-2.compute.amazonaws.com/", allowCredentials = "true")
 @RequiredArgsConstructor
 @Slf4j
 public class MemberController {

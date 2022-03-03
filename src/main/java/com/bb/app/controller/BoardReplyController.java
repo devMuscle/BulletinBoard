@@ -15,7 +15,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @RestController
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+@CrossOrigin(origins = "http://ec2-13-209-50-25.ap-northeast-2.compute.amazonaws.com/", allowedHeaders = "*")
 @RequestMapping("/comments/trade-comment")
 @RequiredArgsConstructor
 public class BoardReplyController {

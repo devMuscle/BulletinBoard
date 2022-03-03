@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
 @RestController
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+@CrossOrigin(origins = "http://ec2-13-209-50-25.ap-northeast-2.compute.amazonaws.com/", allowedHeaders = "*")
 @RequestMapping("/comments/vote-comment")
 public class VoteReplyController {
 
