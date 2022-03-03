@@ -24,7 +24,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @RestController
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+@CrossOrigin(origins = "http://ec2-13-209-50-25.ap-northeast-2.compute.amazonaws.com/", allowCredentials = "true")
 @RequestMapping("/memo")
 @AllArgsConstructor
 public class MessageController {
@@ -41,7 +41,6 @@ public class MessageController {
     @GetMapping("/inbox/{loginId}")
     public Object MsgInBox(@PathVariable String loginId, @PageableDefault(size = 8) Pageable pageable){
         List<MessageDto> msgList = messageService.MessageInBox(loginId, pageable);
-
         return msgList;
     }
 
@@ -54,8 +53,8 @@ public class MessageController {
 
     @PostMapping("")
     public ResponseEntity<Void> MsgWrite(@RequestBody MessageDto msg){
+        System.out.println("제발제이발"+msg.getId());
         messageService.MessageWrite(msg);
-
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 

@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +31,7 @@ public class MessageService {
         Optional<MemberEntity> mem = memberRepository.findById(msg.getSenderId());
         MemberEntity member = mem.get();
         member.UpdateMessageList(msgEntity);
+
     }
 
     @Transactional(readOnly = true)
@@ -68,6 +70,7 @@ public class MessageService {
 
 
     public List<MessageDto> MessageInBox(String loginId, Pageable pageable){
+        System.out.println(loginId);
         Optional<MemberEntity> opMember = memberRepository.findByLoginId(loginId);
         MemberEntity memberEntity = opMember.orElseThrow();
         Long memberId = memberEntity.getId();
