@@ -18,4 +18,10 @@ public interface BoardRepository extends JpaRepository<BoardEntity, Long> {
 
     @Query(value = "select * from board_entity where member_id=:id", nativeQuery = true)
     public List<BoardEntity> findAllByMemberId(@Param("id") Long id, Pageable pageable);
+
+    @Query(value = "select b from BoardEntity b join fetch b.attach")
+    public List<BoardEntity> findAllBoardWithAttach();
+
+    @Query(value = "select b from BoardEntity b join fetch b.attach where b.id =:id")
+    public Optional<BoardEntity> findBoardWithAttach(@Param("id") Long id);
 }

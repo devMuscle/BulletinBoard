@@ -58,7 +58,7 @@ public class BoardService {
 
     @Transactional(readOnly = true)
     public BoardDetailDto TradeboardView(long bno){
-        Optional<BoardEntity> board = boardRepository.findById(bno);
+        Optional<BoardEntity> board = boardRepository.findBoardWithAttach(bno);
         BoardEntity boardEntity = board.get();
         BoardDetailDto boardDetailDto = boardDetailMapper.toDto(boardEntity);
 
@@ -103,7 +103,7 @@ public class BoardService {
     }
 
     public List<BoardDto> TradeboardList(){
-        List<BoardEntity> entityList = boardRepository.findAll();
+        List<BoardEntity> entityList = boardRepository.findAllBoardWithAttach();
         List<BoardDto> boardList = new ArrayList<>();
 
         for(BoardEntity board : entityList) {
@@ -165,7 +165,7 @@ public class BoardService {
 
     @Transactional(readOnly = true)
     public VoteBoardDetailDto VoteboardView(long bno){
-        Optional<VoteBoardEntity> voteBoard = vBoardRepository.findById(bno);
+        Optional<VoteBoardEntity> voteBoard = vBoardRepository.findVoteWithAttachById(bno);
         VoteBoardEntity voteBoardEntity = voteBoard.get();
         VoteBoardDetailDto voteBoardDetailDto = voteBoardDetailMapper.toDto(voteBoardEntity);
 
